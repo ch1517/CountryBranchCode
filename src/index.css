@@ -6,11 +6,38 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+header{
+  width: 100%;
+  height: 90px;
+  color:white;
+  display: flex;
+  background-color: #0097A7;
+  font-size: 30px;
+  font-weight: bold;
+  align-items: center;
+}
+header div{
+  margin-left: 30px;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 .leaflet-container {
   width: 100%;
+}
+.leaflet-tooltip{
+  background-color: #ffffff80;
+  font-weight: bold;
+  border-radius: 5px;
+  border:none;
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.leaflet-tooltip-bottom:before{
+  display: none;
+}
+.leaflet-tooltip-bottom{
+  margin-top: -20px;
 }
