@@ -25,6 +25,7 @@ code {
 }
 .leaflet-container {
   width: 100%;
+  background-color: black;
 }
 .leaflet-tooltip{
   background-color: #ffffff80;
