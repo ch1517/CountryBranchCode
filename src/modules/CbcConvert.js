@@ -75,6 +75,9 @@ function labelText(d, text) {
             t2 = parseInt(text[2] / 10).toString();
             returnTxt = text[0] + " " + t1 + "X" + " " + t2 + "X";
             break;
+        case 10:
+            returnTxt = text[0] + " " + text[1] + " " + text[2];
+            break;
     }
     return returnTxt;
 }
@@ -83,8 +86,12 @@ function lineArray(zoomLevel, start, end) {
     var reArr = [];
     var start = proj4(wgs84, grs80, [start.lng, start.lat]);
     var end = proj4(wgs84, grs80, [end.lng, end.lat]);
+    // switch문으로 수정
     var divide = 100000
-    if (zoomLevel > 16) {
+    if (zoomLevel > 19) {
+        divide = 10;
+    }
+    else if (zoomLevel > 16) {
         divide = 100;
     }
     else if (zoomLevel > 13) {

@@ -19,6 +19,7 @@ function ZoomLevelCheck() {
         },
     });
     map.whenReady(function (e) {
+        console.log(zoomLevel)
         if (state) {
             lineArr = CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast);
             state = false;
@@ -68,7 +69,7 @@ class Maps extends Component {
             <div>
                 <MapContainer style={{ height: "100vh" }} center={position} zoom={this.state.zoom} scrollWheelZoom={true}>
 
-                    <TileLayer
+                    <TileLayer maxZoom={22} maxNativeZoom={18}
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url='https://api.vworld.kr/req/wmts/1.0.0/5FE9AB0A-3B34-32F3-A646-1133D92EF014/midnight/{z}/{y}/{x}.png'
 
