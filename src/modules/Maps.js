@@ -2,22 +2,29 @@ import React, { Component } from 'react';
 import { MapContainer, TileLayer, Polygon, Marker, Popup, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import CbcConvert from './CbcConvert';
 import { useState } from "react";
+import { LatLng } from 'leaflet';
 function ZoomLevelCheck() {
     const [zoomLevel, setZoomLevel] = useState(7); // initial zoom level provided for MapContainer
-    const [lineArr, setLineArr] = useState([]);
+    var [lineArr, setLineArr] = useState([]);
     const map = useMap();
+    var state = true;
     const mapEvents = useMapEvents({
         zoomend: () => {
             setZoomLevel(mapEvents.getZoom());
-            setLineArr(CbcConvert.smallLineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
+
+            setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
         },
         moveend: () => {
-            setLineArr(CbcConvert.smallLineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
+            setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
+        },
+    });
+    map.whenReady(function (e) {
+        if (state) {
+            lineArr = CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast);
+            state = false;
         }
     });
-    if (zoomLevel > 15) {
 
-    }
     if (lineArr.length != 0) {
         return (
             <div>
@@ -51,14 +58,13 @@ class Maps extends Component {
             lat: 36.09698006901975,
             lng: 129.38089519358994,
             zoom: 7,
-            data: CbcConvert.lineArray(),
+            data: [],
         }
     }
 
     render() {
         const position = [this.state.lat, this.state.lng];
         CbcConvert.converter([126.98823732740473, 37.55122041521281]);
-
         return (
             <div>
                 <MapContainer style={{ height: "100vh" }} center={position} zoom={this.state.zoom} scrollWheelZoom={true}>
@@ -69,20 +75,6 @@ class Maps extends Component {
 
                     />
                     <ZoomLevelCheck />
-                    {this.state.data.map(({ id, latLongArr, cbcText }) => {
-                        return <Polygon key={id} positions={latLongArr} color={'white'}
-                            eventHandlers={{
-                                click: (e) => {
-                                    console.log([e.latlng["lat"], e.latlng["lng"]]);
-                                    CbcConvert.converter([e.latlng["lng"], e.latlng["lat"]]);
-                                },
-                            }}>
-                            <Tooltip direction='bottom' opacity={1} permanent>
-                                <span>{cbcText}</span>
-                            </Tooltip>
-                        </Polygon>
-
-                    })}
                     <Marker position={position}>
                         <Popup>
                             <span>A pretty CSS3 popup. <br /> Easily customizable.</span>
