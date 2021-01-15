@@ -63,17 +63,17 @@ function labelText(d, text) {
         case 10000:
             t1 = parseInt(text[1] / 1000).toString();
             t2 = parseInt(text[2] / 1000).toString();
-            returnTxt = text[0] + t1 + "XXX" + " " + t2 + "XXX";
+            returnTxt = text[0] + " " + t1 + "XXX" + " " + t2 + "XXX";
             break;
         case 1000:
             t1 = parseInt(text[1] / 100).toString();
             t2 = parseInt(text[2] / 100).toString();
-            returnTxt = text[0] + t1 + "XX" + " " + t2 + "XX";
+            returnTxt = text[0] + " " + t1 + "XX" + " " + t2 + "XX";
             break;
         case 100:
             t1 = parseInt(text[1] / 10).toString();
             t2 = parseInt(text[2] / 10).toString();
-            returnTxt = text[0] + t1 + "X" + " " + t2 + "X";
+            returnTxt = text[0] + " " + t1 + "X" + " " + t2 + "X";
             break;
     }
     return returnTxt;

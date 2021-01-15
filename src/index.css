@@ -15,9 +15,21 @@ header{
   font-size: 30px;
   font-weight: bold;
   align-items: center;
+  justify-content: space-between;
 }
-header div{
+header .title{
   margin-left: 30px;
+}
+header .developer{
+  color:black;
+  font-size: 15px;
+  margin-right: 20px;
+  align-self:flex-end;
+  margin-bottom: 15px;
+}
+header .developer a:link,:visited,:hover{
+  text-decoration: none;
+  color: black;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

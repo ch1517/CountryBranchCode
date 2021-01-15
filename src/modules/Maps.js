@@ -63,8 +63,7 @@ class Maps extends Component {
     }
 
     render() {
-        const position = [this.state.lat, this.state.lng];
-        CbcConvert.converter([126.98823732740473, 37.55122041521281]);
+        const position = [37.55122041521281, 126.98823732740473];
         return (
             <div>
                 <MapContainer style={{ height: "100vh" }} center={position} zoom={this.state.zoom} scrollWheelZoom={true}>
