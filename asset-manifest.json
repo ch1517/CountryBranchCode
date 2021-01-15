@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/Country-branch-code/static/css/main.67de9a5f.chunk.css",
-    "main.js": "/Country-branch-code/static/js/main.510d57d5.chunk.js",
-    "main.js.map": "/Country-branch-code/static/js/main.510d57d5.chunk.js.map",
-    "runtime-main.js": "/Country-branch-code/static/js/runtime-main.74b6edd1.js",
-    "runtime-main.js.map": "/Country-branch-code/static/js/runtime-main.74b6edd1.js.map",
-    "static/js/2.6f33415b.chunk.js": "/Country-branch-code/static/js/2.6f33415b.chunk.js",
-    "static/js/2.6f33415b.chunk.js.map": "/Country-branch-code/static/js/2.6f33415b.chunk.js.map",
-    "static/js/3.e6e96bf3.chunk.js": "/Country-branch-code/static/js/3.e6e96bf3.chunk.js",
-    "static/js/3.e6e96bf3.chunk.js.map": "/Country-branch-code/static/js/3.e6e96bf3.chunk.js.map",
+    "main.css": "/Country-branch-code/static/css/main.ccc1872c.chunk.css",
+    "main.js": "/Country-branch-code/static/js/main.b19ef0bc.chunk.js",
+    "main.js.map": "/Country-branch-code/static/js/main.b19ef0bc.chunk.js.map",
+    "runtime-main.js": "/Country-branch-code/static/js/runtime-main.823211bd.js",
+    "runtime-main.js.map": "/Country-branch-code/static/js/runtime-main.823211bd.js.map",
+    "static/js/2.b0ac254e.chunk.js": "/Country-branch-code/static/js/2.b0ac254e.chunk.js",
+    "static/js/2.b0ac254e.chunk.js.map": "/Country-branch-code/static/js/2.b0ac254e.chunk.js.map",
+    "static/js/3.a8016091.chunk.js": "/Country-branch-code/static/js/3.a8016091.chunk.js",
+    "static/js/3.a8016091.chunk.js.map": "/Country-branch-code/static/js/3.a8016091.chunk.js.map",
     "index.html": "/Country-branch-code/index.html",
-    "static/css/main.67de9a5f.chunk.css.map": "/Country-branch-code/static/css/main.67de9a5f.chunk.css.map",
-    "static/js/2.6f33415b.chunk.js.LICENSE.txt": "/Country-branch-code/static/js/2.6f33415b.chunk.js.LICENSE.txt",
+    "static/css/main.ccc1872c.chunk.css.map": "/Country-branch-code/static/css/main.ccc1872c.chunk.css.map",
+    "static/js/2.b0ac254e.chunk.js.LICENSE.txt": "/Country-branch-code/static/js/2.b0ac254e.chunk.js.LICENSE.txt",
     "static/media/logo.6ce24c58.svg": "/Country-branch-code/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.74b6edd1.js",
-    "static/js/2.6f33415b.chunk.js",
-    "static/css/main.67de9a5f.chunk.css",
-    "static/js/main.510d57d5.chunk.js"
+    "static/js/runtime-main.823211bd.js",
+    "static/js/2.b0ac254e.chunk.js",
+    "static/css/main.ccc1872c.chunk.css",
+    "static/js/main.b19ef0bc.chunk.js"
   ]
 }
