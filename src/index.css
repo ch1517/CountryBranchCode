@@ -11,7 +11,7 @@ header{
   height: 90px;
   color:white;
   display: flex;
-  background-color: #0097A7;
+  background-color: #1e304f;
   font-size: 30px;
   font-weight: bold;
   align-items: center;
@@ -28,7 +28,7 @@ header .developer{
   margin-bottom: 15px;
 }
 header .search{
-  width: 30%;
+  width: 35%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -38,23 +38,29 @@ header .search input[type=text]{
   width:95%;
   height: 45%;
   border-radius: 10px;
-  border-style: 2px solid #dcdcdc;
+  border-style: none;
   font-size: 20px;
 }
 header .search input[type=submit]{
-height: 50%;
-margin-left: 5px;
+  width: 80px;
+  height: 50%;
+  margin-left: 10px;
+  background-color: black;
+  color:white;
+  border-radius: 10px;
+  border-style: none;
+  font-weight: bold;
 }
 header .search .alert{
   position: absolute;
   top:70px;
   right: 10;
   font-size: 15px;
-  color:red;
+  color:#9B111E;
 }
 header .developer a:link,:visited,:hover{
   text-decoration: none;
-  color: black;
+  color:white;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -73,9 +79,15 @@ code {
   padding-left: 15px;
   padding-right: 15px;
 }
+.leaflet-tooltip-top{
+  background-color: #ffffff;
+}
 .leaflet-tooltip-bottom:before{
   display: none;
 }
 .leaflet-tooltip-bottom{
   margin-top: -20px;
+}
+.leaflet-popup-content{
+  text-align: center;
 }
