@@ -74,14 +74,14 @@ class Maps extends Component {
                     scrollWheelZoom={true}>
                     <TileLayer maxZoom={22} maxNativeZoom={18} zoom={this.props.zoomLevel}
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url='https://api.vworld.kr/req/wmts/1.0.0/5FE9AB0A-3B34-32F3-A646-1133D92EF014/midnight/{z}/{y}/{x}.png'
+                        url='https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png'
 
                     />
                     <ZoomLevelCheck zoomLevel={this.props.zoomLevel} />
                     <MapConsumer>
                         {(map) => {
                             // 헤더로부터 입력받은 값을 업데이트
-                            map.setView(new LatLng(this.props.lat, this.props.lng), this.props.zoomLevel)
+                            // map.setView(new LatLng(this.props.lat, this.props.lng), this.props.zoomLevel)
                             return null
                         }}
                     </MapConsumer>
