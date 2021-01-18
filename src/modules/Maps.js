@@ -81,7 +81,7 @@ class Maps extends Component {
                     <MapConsumer>
                         {(map) => {
                             // 헤더로부터 입력받은 값을 업데이트
-                            // map.setView(new LatLng(this.props.lat, this.props.lng), this.props.zoomLevel)
+                            map.setView(new LatLng(this.props.lat, this.props.lng), this.props.zoomLevel)
                             return null
                         }}
                     </MapConsumer>
