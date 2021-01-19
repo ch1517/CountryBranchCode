@@ -58,9 +58,6 @@ class Maps extends Component {
             data: [],
         }
     }
-    // componentDidUpdate() {
-
-    // }
     render() {
         //36.09698006901975,129.38089519358994
         //37.55122041521281, 126.98823732740473
@@ -73,10 +70,10 @@ class Maps extends Component {
                 <MapContainer style={{ height: "100vh" }} center={position} zoom={this.props.zoomLevel}
                     scrollWheelZoom={true}>
                     <TileLayer maxZoom={22} maxNativeZoom={18} zoom={this.props.zoomLevel}
+                        // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                        // url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                    // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    // url='https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png'
+                        url='https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png'
 
                     />
                     <ZoomLevelCheck zoomLevel={this.props.zoomLevel} />
