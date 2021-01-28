@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/Country-branch-code/static/css/main.0ba15504.chunk.css",
-    "main.js": "/Country-branch-code/static/js/main.2b46abcd.chunk.js",
-    "main.js.map": "/Country-branch-code/static/js/main.2b46abcd.chunk.js.map",
-    "runtime-main.js": "/Country-branch-code/static/js/runtime-main.51e971fb.js",
-    "runtime-main.js.map": "/Country-branch-code/static/js/runtime-main.51e971fb.js.map",
-    "static/js/2.8175e194.chunk.js": "/Country-branch-code/static/js/2.8175e194.chunk.js",
-    "static/js/2.8175e194.chunk.js.map": "/Country-branch-code/static/js/2.8175e194.chunk.js.map",
-    "static/js/3.eb939802.chunk.js": "/Country-branch-code/static/js/3.eb939802.chunk.js",
-    "static/js/3.eb939802.chunk.js.map": "/Country-branch-code/static/js/3.eb939802.chunk.js.map",
-    "index.html": "/Country-branch-code/index.html",
-    "static/css/main.0ba15504.chunk.css.map": "/Country-branch-code/static/css/main.0ba15504.chunk.css.map",
-    "static/js/2.8175e194.chunk.js.LICENSE.txt": "/Country-branch-code/static/js/2.8175e194.chunk.js.LICENSE.txt",
-    "static/media/logo.6ce24c58.svg": "/Country-branch-code/static/media/logo.6ce24c58.svg"
+    "main.css": "/CountryBranchCode/static/css/main.0ba15504.chunk.css",
+    "main.js": "/CountryBranchCode/static/js/main.2b46abcd.chunk.js",
+    "main.js.map": "/CountryBranchCode/static/js/main.2b46abcd.chunk.js.map",
+    "runtime-main.js": "/CountryBranchCode/static/js/runtime-main.0b0cb9d2.js",
+    "runtime-main.js.map": "/CountryBranchCode/static/js/runtime-main.0b0cb9d2.js.map",
+    "static/js/2.8175e194.chunk.js": "/CountryBranchCode/static/js/2.8175e194.chunk.js",
+    "static/js/2.8175e194.chunk.js.map": "/CountryBranchCode/static/js/2.8175e194.chunk.js.map",
+    "static/js/3.eb939802.chunk.js": "/CountryBranchCode/static/js/3.eb939802.chunk.js",
+    "static/js/3.eb939802.chunk.js.map": "/CountryBranchCode/static/js/3.eb939802.chunk.js.map",
+    "index.html": "/CountryBranchCode/index.html",
+    "static/css/main.0ba15504.chunk.css.map": "/CountryBranchCode/static/css/main.0ba15504.chunk.css.map",
+    "static/js/2.8175e194.chunk.js.LICENSE.txt": "/CountryBranchCode/static/js/2.8175e194.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/CountryBranchCode/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.51e971fb.js",
+    "static/js/runtime-main.0b0cb9d2.js",
     "static/js/2.8175e194.chunk.js",
     "static/css/main.0ba15504.chunk.css",
     "static/js/main.2b46abcd.chunk.js"
