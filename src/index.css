@@ -105,6 +105,7 @@ header .historyClose{
   right: 0;;display: none;
   z-index: 1000;
   background-color: #1e304f;
+  overflow: auto;
 }
 header .historyOpen{
   width: 25%;
@@ -114,6 +115,27 @@ header .historyOpen{
   position: absolute;
   z-index: 1000;
   background-color: #1e304f;
+  overflow: auto;
+}
+.historyList{
+  padding:20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items:center;
+  cursor: pointer;
+}
+.historyList img{
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+}
+.historyList .latlng{
+  font-size: 12px;
+
+}
+.historyList .cbcCode{
+  font-size: 18px;
 }
 .toggleBtn{
   width: 100px;

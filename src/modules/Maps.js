@@ -16,9 +16,12 @@ function ZoomLevelCheck(props) {
             setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
         },
         moveend: () => {
-            props.setMenuState(false);
             setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
         },
+        // 스크롤로 이동할 때 false
+        dragstart: () => {
+            props.setMenuState(false);
+        }
     });
 
     map.whenReady(function (e) {
@@ -74,8 +77,6 @@ class Maps extends Component {
         const position = [this.props.lat, this.props.lng];
         const cbc = CbcConvert.converter([this.props.lng, this.props.lat]);
         const cbcTxt = cbc[0] + " " + cbc[1] + " " + cbc[2];
-
-        console.log(cbcTxt);
         return (
             <div className="contents">
                 <MapContainer style={{ height: "100vh" }} center={position} zoom={this.props.zoomLevel}

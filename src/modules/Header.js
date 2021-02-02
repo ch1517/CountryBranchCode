@@ -1,5 +1,6 @@
 import '../App.css';
 import { React, Component } from 'react';
+import CbcConvert from './CbcConvert';
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -31,9 +32,7 @@ class Header extends Component {
         }
     }
     pushToApp(event) {
-        console.log(event)
-        this.props.setAppState(this.state.lat, this.state.lng, this.zoomLevel);
-        this.props.setMenuState(false);
+        this.props.setAppState(this.state.lat, this.state.lng, null, true);
         event.preventDefault();
     }
     menuSateChangeWindow() {
@@ -47,6 +46,23 @@ class Header extends Component {
         }
     }
     render() {
+        function makeHistory(historyArr, setAppState) {
+            return <div>
+                {historyArr.map(({ lng, lat }) => {
+                    var cbc = CbcConvert.converter([parseInt(lng), parseInt(lat)]);
+                    return <div className="historyList" onClick={(event) => {
+                        setAppState(lat, lng, null, true)
+                    }
+                    }>
+                        <img src="/CountryBranchCode/images/marker.png" />
+                        <div className="codeDiv">
+                            <div className="cbcCode">{cbc[0] + " " + cbc[1] + " " + cbc[2]}</div>
+                            <div className="latlng">{lat.toFixed(6)}, {lng.toFixed(6)}</div>
+                        </div>
+                    </div>
+                })}
+            </div>
+        }
         return (
             <header>
                 <div className="leftMenu">
@@ -58,8 +74,9 @@ class Header extends Component {
                         placeholder="36.09698006901975, 129.38089519358994" onChange={this.handleChange} />
                     <input type="submit" value="검색"></input>
                     <div className="alert">{this.state.alertTxt}</div>
-
-                    <div className={this.props.menuState ? 'historyOpen' : 'historyClose'}></div>
+                    <div className={this.props.menuState ? 'historyOpen' : 'historyClose'}>
+                        {makeHistory(this.props.historyList, this.props.setAppState)}
+                    </div>
                 </form>
                 <button className="toggleBtn" onClick={this.menuSateChangeWindow}>history</button>
 
