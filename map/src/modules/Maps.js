@@ -5,6 +5,7 @@ import { useState } from "react";
 import { LatLng } from 'leaflet';
 function ZoomLevelCheck(props) {
     const [zoomLevel, setZoomLevel] = useState(props.zoomLevel); // initial zoom level provided for MapContainer
+
     var [lineArr, setLineArr] = useState([]);
     const map = useMap();
     var state = true;
@@ -12,11 +13,9 @@ function ZoomLevelCheck(props) {
     const mapEvents = useMapEvents({
         zoomend: () => {
             setZoomLevel(mapEvents.getZoom());
-            props.setMenuState(false);
             setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
         },
         moveend: () => {
-            props.setMenuState(false);
             setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
         },
     });
@@ -59,32 +58,26 @@ class Maps extends Component {
             data: [],
         }
     }
+    // componentDidUpdate() {
 
-    // 검색으로 인해 lat, lng 값이 변경 됐을 경우에만 props 업데이트
-    shouldComponentUpdate(nextProps, nextState) {
-        if ((this.props.lat !== nextProps.lat) || (this.props.lng !== nextProps.lng)) {
-            return true
-        } else {
-            return false
-        }
-    }
+    // }
     render() {
         //36.09698006901975,129.38089519358994
         //37.55122041521281, 126.98823732740473
         const position = [this.props.lat, this.props.lng];
         const cbc = CbcConvert.converter([this.props.lng, this.props.lat]);
         const cbcTxt = cbc[0] + " " + cbc[1] + " " + cbc[2];
-
         console.log(cbcTxt);
         return (
-            <div className="contents">
+            <div>
                 <MapContainer style={{ height: "100vh" }} center={position} zoom={this.props.zoomLevel}
                     scrollWheelZoom={true}>
                     <TileLayer maxZoom={22} maxNativeZoom={18} zoom={this.props.zoomLevel}
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url='https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png'
+                        url='https://api.vworld.kr/req/wmts/1.0.0/5FE9AB0A-3B34-32F3-A646-1133D92EF014/midnight/{z}/{y}/{x}.png'
+
                     />
-                    <ZoomLevelCheck zoomLevel={this.props.zoomLevel} setMenuState={this.props.setMenuState} />
+                    <ZoomLevelCheck zoomLevel={this.props.zoomLevel} />
                     <MapConsumer>
                         {(map) => {
                             // 헤더로부터 입력받은 값을 업데이트

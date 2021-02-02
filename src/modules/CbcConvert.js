@@ -82,7 +82,6 @@ function labelText(d, text) {
     return returnTxt;
 }
 function lineArray(zoomLevel, start, end) {
-    console.log("call lineArray");
     var reArr = [];
     var start = proj4(wgs84, grs80, [start.lng, start.lat]);
     var end = proj4(wgs84, grs80, [end.lng, end.lat]);

@@ -5,10 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 header{
   width: 100%;
-  height: 90px;
+  height: 95px;
   color:white;
   display: flex;
   background-color: #1e304f;
@@ -20,10 +21,15 @@ header{
 header .title{
   margin-left: 30px;
 }
+.leftMenu{
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
 header .developer{
   color:black;
   font-size: 15px;
-  margin-right: 20px;
+  margin-left: 20px;
   align-self:flex-end;
   margin-bottom: 15px;
 }
@@ -92,22 +98,56 @@ code {
 .leaflet-popup-content{
   text-align: center;
 }
+header .historyClose{
+  width: 25%;
+  height: 100%;
+  top:89px;
+  right: 0;;display: none;
+  z-index: 1000;
+  background-color: #1e304f;
+}
+header .historyOpen{
+  width: 25%;
+  height: 100%;
+  top:89px;
+  right: 0;;
+  position: absolute;
+  z-index: 1000;
+  background-color: #1e304f;
+}
+.toggleBtn{
+  width: 100px;
+  height: 50px;
+  margin-right: 20px;
+  border-radius: 20px;
+  background-color: #ffffff;
+  font-size: 18px;
+  border: none;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+.toggleBtn:hover{
+  color: black;
+}
+/* 오른쪽 하단 attribution 숨기기 */
+.leaflet-control-attribution{
+  display: none;
+}
 @media all and (max-width:767px){
   header{
     height: 70px;
   }
+  header .leftMenu{
+    flex-direction: column;
+    justify-content: flex-end;
+  }
   header .title{
-    width:20%;
-    margin-left: 15px;
+    width:100%;
+    margin-left: 12px;
     font-size: 18px;
   }
   header .developer{
     font-size: 10px;
-    margin-right: 15px;
-    margin-left: 5px;
-    position: absolute;
-    top:55px;
-    left: 10%;
   }
   header .search .alert{
     position: absolute;
@@ -127,5 +167,16 @@ code {
     font-size: 10px;
     width: 50px;
     margin-right: 10px;
+  }
+  header .toggleBtn{
+    display: none;
+  }
+  header .historyOpen{
+    top: 60px;
+    height: 20%;
+    width: 100%;
+  }
+  header .historyClose{
+    top: 60px;
   }
 }
