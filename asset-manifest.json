@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/CountryBranchCode/static/css/main.0ba15504.chunk.css",
-    "main.js": "/CountryBranchCode/static/js/main.2b46abcd.chunk.js",
-    "main.js.map": "/CountryBranchCode/static/js/main.2b46abcd.chunk.js.map",
-    "runtime-main.js": "/CountryBranchCode/static/js/runtime-main.0b0cb9d2.js",
-    "runtime-main.js.map": "/CountryBranchCode/static/js/runtime-main.0b0cb9d2.js.map",
-    "static/js/2.8175e194.chunk.js": "/CountryBranchCode/static/js/2.8175e194.chunk.js",
-    "static/js/2.8175e194.chunk.js.map": "/CountryBranchCode/static/js/2.8175e194.chunk.js.map",
-    "static/js/3.eb939802.chunk.js": "/CountryBranchCode/static/js/3.eb939802.chunk.js",
-    "static/js/3.eb939802.chunk.js.map": "/CountryBranchCode/static/js/3.eb939802.chunk.js.map",
+    "main.css": "/CountryBranchCode/static/css/main.88ba5199.chunk.css",
+    "main.js": "/CountryBranchCode/static/js/main.e6225272.chunk.js",
+    "main.js.map": "/CountryBranchCode/static/js/main.e6225272.chunk.js.map",
+    "runtime-main.js": "/CountryBranchCode/static/js/runtime-main.fc91d400.js",
+    "runtime-main.js.map": "/CountryBranchCode/static/js/runtime-main.fc91d400.js.map",
+    "static/js/2.9e82f3f5.chunk.js": "/CountryBranchCode/static/js/2.9e82f3f5.chunk.js",
+    "static/js/2.9e82f3f5.chunk.js.map": "/CountryBranchCode/static/js/2.9e82f3f5.chunk.js.map",
+    "static/js/3.6d16c382.chunk.js": "/CountryBranchCode/static/js/3.6d16c382.chunk.js",
+    "static/js/3.6d16c382.chunk.js.map": "/CountryBranchCode/static/js/3.6d16c382.chunk.js.map",
     "index.html": "/CountryBranchCode/index.html",
-    "static/css/main.0ba15504.chunk.css.map": "/CountryBranchCode/static/css/main.0ba15504.chunk.css.map",
-    "static/js/2.8175e194.chunk.js.LICENSE.txt": "/CountryBranchCode/static/js/2.8175e194.chunk.js.LICENSE.txt",
+    "static/css/main.88ba5199.chunk.css.map": "/CountryBranchCode/static/css/main.88ba5199.chunk.css.map",
+    "static/js/2.9e82f3f5.chunk.js.LICENSE.txt": "/CountryBranchCode/static/js/2.9e82f3f5.chunk.js.LICENSE.txt",
     "static/media/logo.6ce24c58.svg": "/CountryBranchCode/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.0b0cb9d2.js",
-    "static/js/2.8175e194.chunk.js",
-    "static/css/main.0ba15504.chunk.css",
-    "static/js/main.2b46abcd.chunk.js"
+    "static/js/runtime-main.fc91d400.js",
+    "static/js/2.9e82f3f5.chunk.js",
+    "static/css/main.88ba5199.chunk.css",
+    "static/js/main.e6225272.chunk.js"
   ]
 }
