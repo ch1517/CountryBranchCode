@@ -18,11 +18,11 @@ class App extends Component {
     this.setAppState = this.setAppState.bind(this);
     this.setMenuState = this.setMenuState.bind(this);
   }
-  setAppState(_lat, _lng, _zoomLevel, _menuState) {
+  setAppState(_lat, _lng, _cbcCode, _zoomLevel, _menuState) {
     var _historyList = this.state.historyList;
 
     if (_zoomLevel == null) {
-      _zoomLevel = this.state.zoomLevel;
+      _zoomLevel = 21;
     }
 
     if (_lat == null) {
@@ -30,7 +30,6 @@ class App extends Component {
     } else if (_lng == null) {
       _lng = this.state.lng
     } else {
-      console.log(_lat, _lng)
       // 중복확인
       var type = true
       var index = 0
@@ -44,7 +43,7 @@ class App extends Component {
       if (!type && index > -1) {
         _historyList.splice(index, 1);
       }
-      _historyList.splice(0, 0, { lat: _lat, lng: _lng });
+      _historyList.splice(0, 0, { cbcCode: _cbcCode, lat: _lat, lng: _lng });
     }
     this.setState({
       lat: _lat,

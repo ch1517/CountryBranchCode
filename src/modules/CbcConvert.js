@@ -1,3 +1,5 @@
+import { ConsoleWriter } from 'istanbul-lib-report';
+import { parse } from 'path';
 import proj4 from 'proj4';
 
 const w = { 7: "가", 8: "나", 9: "다", 10: "라", 11: "마", 12: "바", 13: "사" };
@@ -5,12 +7,37 @@ const h = { 13: "가", 14: "나", 15: "다", 16: "라", 17: "마", 18: "바", 19
 const grs80 = "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
 const wgs84 = "+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees";
 
-function converter(codinate) {
+function converterToCbc(codinate) {
     var wgs84P = proj4(wgs84, grs80, codinate);
     var wP = parseInt(wgs84P[0].toString().split(".")[0]);
     var hP = parseInt(wgs84P[1].toString().split(".")[0]);
-    var code = [w[parseInt(parseInt(wP) / 100000)] + h[parseInt(parseInt(hP) / 100000)], parseInt(wP % 100000 / 10), parseInt(hP % 100000 / 10)]
+    var code = [w[parseInt(parseInt(wP) / 100000)] + h[parseInt(parseInt(hP) / 100000)], parseInt(wP % 100000 / 10), parseInt(hP % 100000 / 10)];
+    console.log(code);
     return code;
+}
+function converterToLatLng(cbcCode) {
+    cbcCode = cbcCode.split(" ");
+    var lat, lng;
+    Object.keys(w).forEach(function (key) {
+        if (w[key] == cbcCode[0].charAt(0)) {
+            lat = key;
+        }
+    })
+    Object.keys(h).forEach(function (key) {
+        if (h[key] == cbcCode[0].charAt(1)) {
+            lng = key;
+        }
+    })
+    if (lat == null || lng == null || cbcCode[1].length != cbcCode[2].length) {
+        return -1;
+    } else {
+        const length = cbcCode[1].length + 1;
+        lat = Math.pow(10, length) * lat + parseInt(cbcCode[1]) * Math.pow(10, 6 - length) + 5;
+        lng = Math.pow(10, length) * lng + parseInt(cbcCode[2]) * Math.pow(10, 6 - length) + 5;
+
+        var grs80P = proj4(grs80, wgs84, [lat, lng]);
+        return grs80P;
+    }
 }
 function smallPointXY(m, minX, maxX, minY, maxY) {
     var p;
@@ -112,7 +139,7 @@ function lineArray(zoomLevel, start, end) {
                     var nx = pArr[i + 1][j];
                     var ny = pArr[i][j + 1];
                     var nxy = pArr[i + 1][j + 1];
-                    var cbc = converter([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2])
+                    var cbc = converterToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2])
                     if (cbc != undefined) {
                         cbc = labelText(divide, cbc)
                     } else {
@@ -131,4 +158,4 @@ function lineArray(zoomLevel, start, end) {
 
     return reArr;
 }
-export default { converter, lineArray };
+export default { converterToCbc, lineArray, converterToLatLng };

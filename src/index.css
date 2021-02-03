@@ -34,7 +34,7 @@ header .developer{
   margin-bottom: 15px;
 }
 header .search{
-  width: 35%;
+  width: 40%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -57,13 +57,6 @@ header .search input[type=submit]{
   border-radius: 10px;
   border-style: none;
   font-weight: bold;
-}
-header .search .alert{
-  position: absolute;
-  top:70px;
-  right: 10;
-  font-size: 15px;
-  color:#9B111E;
 }
 header .developer a:link,:visited,:hover{
   text-decoration: none;
@@ -99,7 +92,7 @@ code {
   text-align: center;
 }
 header .historyClose{
-  width: 25%;
+  width: 20%;
   height: 100%;
   top:89px;
   right: 0;;display: none;
@@ -108,7 +101,7 @@ header .historyClose{
   overflow: auto;
 }
 header .historyOpen{
-  width: 25%;
+  width: 20%;
   height: 100%;
   top:89px;
   right: 0;;
@@ -155,7 +148,18 @@ header .historyOpen{
 .leaflet-control-attribution{
   display: none;
 }
-@media all and (max-width:767px){
+@media all and (max-width:1200px){
+  header .historyOpen{
+    width: 25%;
+  }
+  header .historyClose{
+    width : 25%;
+  }
+  header .search{
+    width: 50%;
+  }
+}
+@media all and (max-width:800px){
   header{
     height: 70px;
   }
@@ -170,13 +174,6 @@ header .historyOpen{
   }
   header .developer{
     font-size: 10px;
-  }
-  header .search .alert{
-    position: absolute;
-    top:55px;
-    left: 10;
-    font-size: 10px;
-    color:#9B111E;
   }
   header .search{
     width: 70%;
@@ -195,7 +192,7 @@ header .historyOpen{
   }
   header .historyOpen{
     top: 60px;
-    height: 20%;
+    height: 25%;
     width: 100%;
   }
   header .historyClose{

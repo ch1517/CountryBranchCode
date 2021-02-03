@@ -7,7 +7,7 @@ class Header extends Component {
         this.state = {
             lat: 36.09698006901975,
             lng: 129.38089519358994,
-            alertTxt: ""
+            submitValue: "",
         }
         this.pushToApp = this.pushToApp.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -16,24 +16,53 @@ class Header extends Component {
     }
 
     handleChange(event) {
-        var s = event.target.value.split(",")
-        var _lat = parseFloat(s[0])
-        var _lng = parseFloat(s[1])
-        if (!(_lat > 32 && _lat < 39) || !(_lng > 124 && _lng < 131)) {
-            this.setState({
-                alertTxt: "lat,lng 형식으로 입력해주세요."
-            });
-        } else {
-            this.setState({
-                lat: _lat,
-                lng: _lng,
-                alertTxt: ""
-            });
-        }
+        this.setState({
+            submitValue: event.target.value
+        })
     }
     pushToApp(event) {
-        this.props.setAppState(this.state.lat, this.state.lng, null, true);
         event.preventDefault();
+        var s = this.state.submitValue.split(",");
+        var _lat, _lng;
+        // lat, lng 으로 주어질 때
+        if (s.length == 2) {
+            _lat = parseFloat(s[0])
+            _lng = parseFloat(s[1])
+            if (_lat == NaN || _lng == NaN || !(_lat > 32 && _lat < 39) || !(_lng > 124 && _lng < 131)) {
+                alert("ex. '32.66367, 124.43291'");
+            } else {
+                this.setState({
+                    lat: _lat,
+                    lng: _lng,
+                });
+                var cbc = CbcConvert.converterToCbc([_lng, _lat])
+                this.props.setAppState(_lat, _lng, cbc[0] + " " + cbc[1] + " " + cbc[2], null, true);
+            }
+        } else {
+            s = this.state.submitValue.split(" ")
+            if (s.length == 3) {
+                //"마마 6932 9052"
+                //s[0]가 문자, s[1],s[2]가 숫자가 아닌 경우
+                if (!isNaN(s[0]) || isNaN(s[1]) || isNaN(s[2])) {
+                    alert("ex. '가가 1234 1234'");
+                } else {
+                    var latLng = CbcConvert.converterToLatLng(this.state.submitValue);
+                    if (latLng == -1) {
+                        alert("ex. 가가 1234 1234");
+                    } else {
+                        _lng = latLng[0];
+                        _lat = latLng[1];
+                        this.setState({
+                            lat: _lat,
+                            lng: _lng
+                        });
+                        this.props.setAppState(_lat, _lng, this.state.submitValue, null, true);
+                    }
+                }
+            } else {
+                alert("ex. '32.66367, 124.43291' or '가가 1234 1234'");
+            }
+        }
     }
     menuSateChangeWindow() {
         this.props.setMenuState(!this.props.menuState);
@@ -45,19 +74,24 @@ class Header extends Component {
             this.props.setMenuState(true);
         }
     }
+    shouldComponentUpdate(nextProps, nextState) {
+        if ((this.state.lat !== nextProps.lat) || (this.state.lng !== nextProps.lng)) {
+            return true
+        } else {
+            return false
+        }
+    }
     render() {
         function makeHistory(historyArr, setAppState) {
             return <div>
-                {historyArr.map(({ lng, lat }) => {
-                    var cbc = CbcConvert.converter([parseInt(lng), parseInt(lat)]);
+                {historyArr.map(({ lng, lat, cbcCode }) => {
                     return <div className="historyList" onClick={(event) => {
-                        setAppState(lat, lng, null, true)
-                    }
-                    }>
+                        setAppState(lat, lng, cbcCode, null, true)
+                    }}>
                         <img src="/CountryBranchCode/images/marker.png" />
                         <div className="codeDiv">
-                            <div className="cbcCode">{cbc[0] + " " + cbc[1] + " " + cbc[2]}</div>
-                            <div className="latlng">{lat.toFixed(6)}, {lng.toFixed(6)}</div>
+                            <div className="cbcCode">{cbcCode}</div>
+                            <div className="latlng">{lat.toFixed(5)}, {lng.toFixed(5)}</div>
                         </div>
                     </div>
                 })}
@@ -73,7 +107,6 @@ class Header extends Component {
                     <input onFocus={this.menuSateChangeMobile} onBlur={this.menuSateChangeMobile} type="text"
                         placeholder="36.09698006901975, 129.38089519358994" onChange={this.handleChange} />
                     <input type="submit" value="검색"></input>
-                    <div className="alert">{this.state.alertTxt}</div>
                     <div className={this.props.menuState ? 'historyOpen' : 'historyClose'}>
                         {makeHistory(this.props.historyList, this.props.setAppState)}
                     </div>

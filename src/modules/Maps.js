@@ -39,7 +39,7 @@ function ZoomLevelCheck(props) {
                         eventHandlers={{
                             click: (e) => {
                                 console.log([e.latlng["lat"], e.latlng["lng"]]);
-                                CbcConvert.converter([e.latlng["lng"], e.latlng["lat"]]);
+                                CbcConvert.converterToCbc([e.latlng["lng"], e.latlng["lat"]]);
                             },
                         }}>
                         <Tooltip direction='bottom' opacity={1} permanent>
@@ -75,7 +75,7 @@ class Maps extends Component {
         //36.09698006901975,129.38089519358994
         //37.55122041521281, 126.98823732740473
         const position = [this.props.lat, this.props.lng];
-        const cbc = CbcConvert.converter([this.props.lng, this.props.lat]);
+        const cbc = CbcConvert.converterToCbc([this.props.lng, this.props.lat]);
         const cbcTxt = cbc[0] + " " + cbc[1] + " " + cbc[2];
         return (
             <div className="contents">
