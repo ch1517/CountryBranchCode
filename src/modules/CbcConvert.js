@@ -7,38 +7,45 @@ const h = { 13: "가", 14: "나", 15: "다", 16: "라", 17: "마", 18: "바", 19
 const grs80 = "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
 const wgs84 = "+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees";
 
+// WGS84를 UTM-K로 변경
 function converterToCbc(codinate) {
-    var wgs84P = proj4(wgs84, grs80, codinate);
-    var wP = parseInt(wgs84P[0].toString().split(".")[0]);
-    var hP = parseInt(wgs84P[1].toString().split(".")[0]);
+    var grs80P = proj4(wgs84, grs80, codinate);
+    var wP = parseInt(grs80P[0].toString().split(".")[0]);
+    var hP = parseInt(grs80P[1].toString().split(".")[0]);
     var code = [w[parseInt(parseInt(wP) / 100000)] + h[parseInt(parseInt(hP) / 100000)], parseInt(wP % 100000 / 10), parseInt(hP % 100000 / 10)];
-    console.log(code);
     return code;
 }
+// UTM-K를 WGS84로 변경
 function converterToLatLng(cbcCode) {
     cbcCode = cbcCode.split(" ");
     var lat, lng;
+    // ex "가나 1234 5678"
+    // "가나"의 "가" value의 key 확인
     Object.keys(w).forEach(function (key) {
         if (w[key] == cbcCode[0].charAt(0)) {
             lat = key;
         }
     })
+    // "가나"의 "나" value의 key 확인
     Object.keys(h).forEach(function (key) {
         if (h[key] == cbcCode[0].charAt(1)) {
             lng = key;
         }
     })
+    // lat, lng의 값이 null이거나, 1234 5678의 길이가 같지 않을 때
     if (lat == null || lng == null || cbcCode[1].length != cbcCode[2].length) {
         return -1;
     } else {
+        // lat*100000+1234+5(marker의 중앙을 맞춰주기 위해서), lng도 동일한 로직
         const length = cbcCode[1].length + 1;
         lat = Math.pow(10, length) * lat + parseInt(cbcCode[1]) * Math.pow(10, 6 - length) + 5;
         lng = Math.pow(10, length) * lng + parseInt(cbcCode[2]) * Math.pow(10, 6 - length) + 5;
 
-        var grs80P = proj4(grs80, wgs84, [lat, lng]);
-        return grs80P;
+        var wgs84P = proj4(grs80, wgs84, [lat, lng]);
+        return wgs84P;
     }
 }
+// grid 배열 생성
 function smallPointXY(m, minX, maxX, minY, maxY) {
     var p;
     var TKM = 100000;
@@ -65,21 +72,23 @@ function smallPointXY(m, minX, maxX, minY, maxY) {
     }
     return pArr;
 }
+// grid 모양을 한국 지도에 맞게 보여주기 위한 필터링 작업
 function isInnerinBound(codinate) {
-    var wgs84P = proj4(wgs84, grs80, codinate);
+    var grs80P = proj4(wgs84, grs80, codinate);
     var TKM = 100000;
     var filter = { 7: [13, 21], 8: [13, 20], 9: [14, 21], 10: [15, 21], 11: [15, 21], 12: [17, 21], 13: [18, 21] }
 
-    wgs84P[0] = Math.round(wgs84P[0]);
-    wgs84P[1] = Math.round(wgs84P[1]);
+    grs80P[0] = Math.round(grs80P[0]);
+    grs80P[1] = Math.round(grs80P[1]);
 
-    var t = parseInt(wgs84P[0] / TKM);
+    var t = parseInt(grs80P[0] / TKM);
     if (filter[t] != undefined) {
-        if (wgs84P[1] >= filter[t][0] * TKM && wgs84P[1] < filter[t][1] * TKM)
+        if (grs80P[1] >= filter[t][0] * TKM && grs80P[1] < filter[t][1] * TKM)
             return true;
     }
     return false
 }
+// 각각의 grid에 표시할 Label Text 생성 작업
 function labelText(d, text) {
     var returnTxt;
     var t1, t2;
@@ -108,11 +117,13 @@ function labelText(d, text) {
     }
     return returnTxt;
 }
+// grid를 그리는 작업
 function lineArray(zoomLevel, start, end) {
     var reArr = [];
     var start = proj4(wgs84, grs80, [start.lng, start.lat]);
     var end = proj4(wgs84, grs80, [end.lng, end.lat]);
-    // switch문으로 수정
+
+    // zoomLevel에 따라 grid 배열 생성을 다르게 한다.
     var divide = 100000
     if (zoomLevel > 19) {
         divide = 10;
@@ -129,12 +140,14 @@ function lineArray(zoomLevel, start, end) {
         divide = 100000;
     }
 
+    //grid 배열 생성
     var pArr = smallPointXY(divide, start[0], end[0], start[1], end[1]);
 
     for (var i = 0; i < pArr.length; i++) {
         for (var j = 0; j < pArr[0].length; j++) {
             if (i < pArr.length - 1 && j < pArr[i].length - 1) {
                 var c = pArr[i][j];
+                // 정해진 bound 안에 있다면, 라벨과 grid 표시하기
                 if (isInnerinBound(c)) {
                     var nx = pArr[i + 1][j];
                     var ny = pArr[i][j + 1];

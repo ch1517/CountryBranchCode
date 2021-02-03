@@ -7,55 +7,64 @@ class Header extends Component {
         this.state = {
             lat: 36.09698006901975,
             lng: 129.38089519358994,
-            submitValue: "",
+            submitValue: "", // 검색창에 입력한 값
         }
         this.pushToApp = this.pushToApp.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.menuSateChangeWindow = this.menuSateChangeWindow.bind(this);
         this.menuSateChangeMobile = this.menuSateChangeMobile.bind(this);
     }
-
+    // 검색창에 입력하는 값이 달라질 때마다 호출되는 handler
     handleChange(event) {
+        // submitValue state를 수정한다.
         this.setState({
             submitValue: event.target.value
         })
     }
+    // 검색 버튼을 눌렀을 때 호출되는 handler
     pushToApp(event) {
+        // 기존의 form event를 막는다.
+        // (페이지 새로 고침을 막음)
         event.preventDefault();
+
         var s = this.state.submitValue.split(",");
         var _lat, _lng;
         // lat, lng 으로 주어질 때
         if (s.length == 2) {
             _lat = parseFloat(s[0])
             _lng = parseFloat(s[1])
-            if (_lat == NaN || _lng == NaN || !(_lat > 32 && _lat < 39) || !(_lng > 124 && _lng < 131)) {
+            // 만약 _lat, _lng 이 숫자가 아니고, 한국 지도 범위를 벗어났을 때 
+            if (_lat == NaN || _lng == NaN || !(_lat > 31 && _lat < 39) || !(_lng > 124 && _lng < 133)) {
                 alert("ex. '32.66367, 124.43291'");
             } else {
+                // 정상적인 범위의 값이 주어졌을 때
                 this.setState({
                     lat: _lat,
                     lng: _lng,
                 });
                 var cbc = CbcConvert.converterToCbc([_lng, _lat])
+                // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
                 this.props.setAppState(_lat, _lng, cbc[0] + " " + cbc[1] + " " + cbc[2], null, true);
             }
         } else {
             s = this.state.submitValue.split(" ")
+            // 국가지점번호로 주어질 때
             if (s.length == 3) {
-                //"마마 6932 9052"
                 //s[0]가 문자, s[1],s[2]가 숫자가 아닌 경우
                 if (!isNaN(s[0]) || isNaN(s[1]) || isNaN(s[2])) {
                     alert("ex. '가가 1234 1234'");
                 } else {
                     var latLng = CbcConvert.converterToLatLng(this.state.submitValue);
-                    if (latLng == -1) {
+                    if (latLng == -1) { // converterToLatLng Error
                         alert("ex. 가가 1234 1234");
-                    } else {
+                    } else { // 그 외의 경우
                         _lng = latLng[0];
                         _lat = latLng[1];
                         this.setState({
                             lat: _lat,
                             lng: _lng
                         });
+                        // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
                         this.props.setAppState(_lat, _lng, this.state.submitValue, null, true);
                     }
                 }
@@ -64,9 +73,12 @@ class Header extends Component {
             }
         }
     }
+    // history 메뉴 toggle (Window의 경우)
     menuSateChangeWindow() {
         this.props.setMenuState(!this.props.menuState);
     }
+    // history 메뉴 toggle (mobile 경우)
+    // mobile의 경우 history 버튼이 없기 때문에 검색 input focus 설정 시 history 영역 호출
     menuSateChangeMobile() {
         // 모바일 환경에서만 input Focus, Blur로 history 영역 제어
         const state = /Mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent);
@@ -74,13 +86,7 @@ class Header extends Component {
             this.props.setMenuState(true);
         }
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        if ((this.state.lat !== nextProps.lat) || (this.state.lng !== nextProps.lng)) {
-            return true
-        } else {
-            return false
-        }
-    }
+
     render() {
         function makeHistory(historyArr, setAppState) {
             return <div>
@@ -105,7 +111,7 @@ class Header extends Component {
                 </div>
                 <form className="search" onSubmit={this.pushToApp}>
                     <input onFocus={this.menuSateChangeMobile} onBlur={this.menuSateChangeMobile} type="text"
-                        placeholder="36.09698006901975, 129.38089519358994" onChange={this.handleChange} />
+                        placeholder="32.66367, 124.43291 or 가가 1234 1234" onChange={this.handleChange} />
                     <input type="submit" value="검색"></input>
                     <div className={this.props.menuState ? 'historyOpen' : 'historyClose'}>
                         {makeHistory(this.props.historyList, this.props.setAppState)}

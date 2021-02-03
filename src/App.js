@@ -9,18 +9,18 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lat: 36.09698006901975,
-      lng: 129.38089519358994,
+      lat: 36.37216,
+      lng: 127.36035,
       zoomLevel: 7,
-      menuState: false,
-      historyList: []
+      menuState: false, // history menu toggle
+      historyList: [] // historyList
     }
     this.setAppState = this.setAppState.bind(this);
     this.setMenuState = this.setMenuState.bind(this);
   }
+  //App.js의 state 생성
   setAppState(_lat, _lng, _cbcCode, _zoomLevel, _menuState) {
     var _historyList = this.state.historyList;
-
     if (_zoomLevel == null) {
       _zoomLevel = 21;
     }
@@ -33,6 +33,7 @@ class App extends Component {
       // 중복확인
       var type = true
       var index = 0
+      // lat, lng이 같은 값이 history array에 존재할 때
       _historyList.forEach(function (item, _index) {
         if (item.lat == _lat && item.lng == _lng) {
           type = false
@@ -45,6 +46,7 @@ class App extends Component {
       }
       _historyList.splice(0, 0, { cbcCode: _cbcCode, lat: _lat, lng: _lng });
     }
+
     this.setState({
       lat: _lat,
       lng: _lng,
@@ -53,6 +55,7 @@ class App extends Component {
       historyList: _historyList
     })
   }
+  // history menu toggle state setting
   setMenuState(_menuState) {
     this.setState({
       menuState: _menuState

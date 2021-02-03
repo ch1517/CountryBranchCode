@@ -3,18 +3,21 @@ import { MapContainer, MapConsumer, TileLayer, Polygon, Marker, Popup, Tooltip, 
 import CbcConvert from './CbcConvert';
 import { useState } from "react";
 import { LatLng } from 'leaflet';
+
 function ZoomLevelCheck(props) {
     const [zoomLevel, setZoomLevel] = useState(props.zoomLevel); // initial zoom level provided for MapContainer
     var [lineArr, setLineArr] = useState([]);
     const map = useMap();
-    var state = true;
+    var state = true; // 초기화 시 한번만 실행하기 위한 state 변수
 
     const mapEvents = useMapEvents({
+        // 지도 zoom 종료
         zoomend: () => {
             setZoomLevel(mapEvents.getZoom());
             props.setMenuState(false);
             setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
         },
+        // 지도 움직임 종료
         moveend: () => {
             setLineArr(CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast));
         },
@@ -25,7 +28,7 @@ function ZoomLevelCheck(props) {
     });
 
     map.whenReady(function (e) {
-        if (state) {
+        if (state) { // 전체지도에 대한 grid array 그리기
             lineArr = CbcConvert.lineArray(zoomLevel, map.getBounds()._southWest, map.getBounds()._northEast);
             state = false;
         }
@@ -72,8 +75,6 @@ class Maps extends Component {
         }
     }
     render() {
-        //36.09698006901975,129.38089519358994
-        //37.55122041521281, 126.98823732740473
         const position = [this.props.lat, this.props.lng];
         const cbc = CbcConvert.converterToCbc([this.props.lng, this.props.lat]);
         const cbcTxt = cbc[0] + " " + cbc[1] + " " + cbc[2];
