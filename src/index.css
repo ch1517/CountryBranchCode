@@ -8,6 +8,10 @@ body {
   overflow: hidden;
 }
 header{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 500;
   width: 100%;
   height: 95px;
   color:white;
@@ -58,7 +62,7 @@ header .search input[type=submit]{
   border-style: none;
   font-weight: bold;
 }
-header .developer a:link,:visited,:hover{
+header .developer a:link, a:visited, a:hover{
   text-decoration: none;
   color:white;
 }
@@ -96,17 +100,17 @@ header .historyClose{
   height: 100%;
   top:89px;
   right: 0;;display: none;
-  z-index: 1000;
+  z-index: 999;
   background-color: #1e304f;
   overflow: auto;
 }
 header .historyOpen{
   width: 20%;
-  height: 100%;
+  height: 100vh;
   top:89px;
   right: 0;;
   position: absolute;
-  z-index: 1000;
+  z-index: 999;
   background-color: #1e304f;
   overflow: auto;
 }
@@ -146,6 +150,9 @@ header .historyOpen{
 }
 /* 오른쪽 하단 attribution 숨기기 */
 .leaflet-control-attribution{
+  display: none;
+}
+.leaflet-control-zoom {
   display: none;
 }
 @media all and (max-width:1200px){
@@ -192,7 +199,7 @@ header .historyOpen{
   }
   header .historyOpen{
     top: 60px;
-    height: 25%;
+    height: 25vh;
     width: 100%;
   }
   header .historyClose{
