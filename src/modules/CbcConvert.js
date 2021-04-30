@@ -1,5 +1,3 @@
-import { ConsoleWriter } from 'istanbul-lib-report';
-import { parse } from 'path';
 import proj4 from 'proj4';
 
 const w = { 7: "가", 8: "나", 9: "다", 10: "라", 11: "마", 12: "바", 13: "사" };
@@ -22,18 +20,18 @@ function converterToLatLng(cbcCode) {
     // ex "가나 1234 5678"
     // "가나"의 "가" value의 key 확인
     Object.keys(w).forEach(function (key) {
-        if (w[key] == cbcCode[0].charAt(0)) {
+        if (w[key] === cbcCode[0].charAt(0)) {
             lat = key;
         }
     })
     // "가나"의 "나" value의 key 확인
     Object.keys(h).forEach(function (key) {
-        if (h[key] == cbcCode[0].charAt(1)) {
+        if (h[key] === cbcCode[0].charAt(1)) {
             lng = key;
         }
     })
     // lat, lng의 값이 null이거나, 1234 5678의 길이가 같지 않을 때
-    if (lat == null || lng == null || cbcCode[1].length != cbcCode[2].length) {
+    if (lat === null || lng === null || cbcCode[1].length !== cbcCode[2].length) {
         return -1;
     } else {
         // lat*100000+1234+5(marker의 중앙을 맞춰주기 위해서), lng도 동일한 로직
@@ -82,7 +80,7 @@ function isInnerinBound(codinate) {
     grs80P[1] = Math.round(grs80P[1]);
 
     var t = parseInt(grs80P[0] / TKM);
-    if (filter[t] != undefined) {
+    if (filter[t] !== undefined) {
         if (grs80P[1] >= filter[t][0] * TKM && grs80P[1] < filter[t][1] * TKM)
             return true;
     }
@@ -99,29 +97,31 @@ function labelText(d, text) {
         case 10000:
             t1 = parseInt(text[1] / 1000).toString();
             t2 = parseInt(text[2] / 1000).toString();
-            returnTxt = text[0] + " " + t1 + "XXX" + " " + t2 + "XXX";
+            returnTxt = `${text[0]} ${t1}XXX ${t2}XXX`;
             break;
         case 1000:
             t1 = parseInt(text[1] / 100).toString();
             t2 = parseInt(text[2] / 100).toString();
-            returnTxt = text[0] + " " + t1 + "XX" + " " + t2 + "XX";
+            returnTxt = `${text[0]} ${t1}XX ${t2}XX`;
             break;
         case 100:
             t1 = parseInt(text[1] / 10).toString();
             t2 = parseInt(text[2] / 10).toString();
-            returnTxt = text[0] + " " + t1 + "X" + " " + t2 + "X";
+            returnTxt = `${text[0]} ${t1}X ${t2}X`;;
             break;
         case 10:
-            returnTxt = text[0] + " " + text[1] + " " + text[2];
+            returnTxt = `${text[0]} ${text[1]} ${text[2]}`;
+            break;
+        default:
             break;
     }
     return returnTxt;
 }
 // grid를 그리는 작업
-function lineArray(zoomLevel, start, end) {
+function lineArray(zoomLevel, _start, _end) {
     var reArr = [];
-    var start = proj4(wgs84, grs80, [start.lng, start.lat]);
-    var end = proj4(wgs84, grs80, [end.lng, end.lat]);
+    var start = proj4(wgs84, grs80, [_start.lng, _start.lat]);
+    var end = proj4(wgs84, grs80, [_end.lng, _end.lat]);
 
     // zoomLevel에 따라 grid 배열 생성을 다르게 한다.
     var divide = 100000
@@ -153,7 +153,7 @@ function lineArray(zoomLevel, start, end) {
                     var ny = pArr[i][j + 1];
                     var nxy = pArr[i + 1][j + 1];
                     var cbc = converterToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2])
-                    if (cbc != undefined) {
+                    if (cbc !== undefined) {
                         cbc = labelText(divide, cbc)
                     } else {
                         cbc = ""
@@ -171,4 +171,5 @@ function lineArray(zoomLevel, start, end) {
 
     return reArr;
 }
-export default { converterToCbc, lineArray, converterToLatLng };
+const exportedObject = { converterToCbc, lineArray, converterToLatLng }
+export default exportedObject;

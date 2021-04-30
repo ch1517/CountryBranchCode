@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Maps from './modules/Maps'
 import Header from './modules/Header';
@@ -15,19 +14,17 @@ class App extends Component {
       menuState: false, // history menu toggle
       historyList: [] // historyList
     }
-    this.setAppState = this.setAppState.bind(this);
-    this.setMenuState = this.setMenuState.bind(this);
   }
   //App.js의 state 생성
-  setAppState(_lat, _lng, _cbcCode, _zoomLevel, _menuState) {
+  setAppState = (_lat, _lng, _cbcCode, _zoomLevel, _menuState) => {
     var _historyList = this.state.historyList;
-    if (_zoomLevel == null) {
+    if (_zoomLevel === null) {
       _zoomLevel = 21;
     }
 
-    if (_lat == null) {
+    if (_lat === null) {
       _lat = this.state.lat
-    } else if (_lng == null) {
+    } else if (_lng === null) {
       _lng = this.state.lng
     } else {
       // 중복확인
@@ -35,7 +32,7 @@ class App extends Component {
       var index = 0
       // lat, lng이 같은 값이 history array에 존재할 때
       _historyList.forEach(function (item, _index) {
-        if (item.lat == _lat && item.lng == _lng) {
+        if (item.lat === _lat && item.lng === _lng) {
           type = false
           index = _index
         }
@@ -56,7 +53,7 @@ class App extends Component {
     })
   }
   // history menu toggle state setting
-  setMenuState(_menuState) {
+  setMenuState = (_menuState) => {
     this.setState({
       menuState: _menuState
     })

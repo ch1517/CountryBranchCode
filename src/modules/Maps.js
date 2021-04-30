@@ -34,7 +34,7 @@ function ZoomLevelCheck(props) {
         }
     });
 
-    if (lineArr.length != 0) {
+    if (lineArr.length !== 0) {
         return (
             <div>
                 {lineArr.map(({ id, latLongArr, cbcText }) => {
