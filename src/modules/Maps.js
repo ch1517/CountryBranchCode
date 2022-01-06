@@ -106,8 +106,8 @@ class Maps extends Component {
     }
   }
   render() {
-    const position = [this.props.lat, this.props.lng];
-    const cbc = CbcConvert.converterToCbc([this.props.lng, this.props.lat]);
+    const position = [this.props.latLng.lat, this.props.latLng.lng];
+    const cbc = CbcConvert.converterToCbc([this.props.latLng.lng, this.props.latLng.lat]);
     const cbcTxt = cbc[0] + " " + cbc[1] + " " + cbc[2];
     return (
       <div className="contents">
@@ -132,7 +132,7 @@ class Maps extends Component {
             {(map) => {
               // 헤더로부터 입력받은 값을 업데이트
               map.setView(
-                new LatLng(this.props.lat, this.props.lng),
+                new LatLng(this.props.latLng.lat, this.props.latLng.lng),
                 this.props.zoomLevel
               );
               return null;
@@ -143,7 +143,7 @@ class Maps extends Component {
               <span className="popupSpan">
                 <b>{cbcTxt}</b>
                 <br />
-                {this.props.lat}, {this.props.lng}
+                {this.props.latLng.lat}, {this.props.latLng.lng}
               </span>
             </Popup>
           </Marker>
