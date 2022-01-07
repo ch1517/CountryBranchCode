@@ -1,7 +1,6 @@
 import "../App.css";
-import { React } from "react";
+import { React, useState } from "react";
 import CbcConvert from "./CbcConvert";
-import { useState } from "react/cjs/react.development";
 
 function Header({ menuState, historyList, setAppState, setMenuState }) {
   const [submitValue, setSubmitValue] = useState(""); // 검색창에 입력한 값
