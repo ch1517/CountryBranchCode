@@ -99,34 +99,36 @@ function Header({ menuState, historyList, setAppState, setMenuState }) {
     );
   }
   return (
-    <header>
+    <div className="header">
       <div className="leftMenu">
         <div className="title">국가지점번호</div>
         <div className="developer">
           <a href="https://doqtqu.tistory.com/186">©doqtqu</a>
         </div>
       </div>
-      <form className="search" onSubmit={pushToApp}>
-        <input
-          onFocus={menuSateChangeMobile}
-          onBlur={menuSateChangeMobile}
-          type="text"
-          placeholder="32.66367, 124.43291 or 가가 1234 1234"
-          // 검색창에 입력하는 값이 달라질 때마다 호출되는 handler
-          onChange={(event) => setSubmitValue(event.target.value)}
-        />
-        <input type="submit" value="검색"></input>
-        <div
-          className={menuState ? "historyOpen" : "historyClose"}
-        >
-          {makeHistory(historyList, setAppState)}
-        </div>
-      </form>
-      {/* history 메뉴 toggle (Window의 경우) */}
-      <button className="toggleBtn" onClick={() => setMenuState(!menuState)}>
-        history
-      </button>
-    </header>
+      <div className="search-div">
+        <form className="search" onSubmit={pushToApp}>
+          <input
+            onFocus={menuSateChangeMobile}
+            onBlur={menuSateChangeMobile}
+            type="text"
+            placeholder="32.66367, 124.43291 or 가가 1234 1234"
+            // 검색창에 입력하는 값이 달라질 때마다 호출되는 handler
+            onChange={(event) => setSubmitValue(event.target.value)}
+          />
+          <input type="submit" value="검색"></input>
+          <div
+            className={menuState ? "historyOpen" : "historyClose"}
+          >
+            {makeHistory(historyList, setAppState)}
+          </div>
+        </form>
+        {/* history 메뉴 toggle (Window의 경우) */}
+        <button className="toggleBtn" onClick={() => setMenuState(!menuState)}>
+          <i className="fas fa-history lg"></i>
+        </button>
+      </div>
+    </div>
   );
 }
 

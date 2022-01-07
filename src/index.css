@@ -7,14 +7,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
 }
-header{
+
+.header {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 500;
   width: 100%;
-  height: 95px;
-  color:white;
+  height: 4rem;
+  color: white;
   display: flex;
   background-color: #1e304f;
   font-size: 30px;
@@ -22,187 +23,239 @@ header{
   align-items: center;
   justify-content: space-between;
 }
-header .title{
-  margin-left: 30px;
-}
-.leftMenu{
+
+.header .leftMenu {
   display: flex;
   height: 100%;
   align-items: center;
 }
-header .developer{
-  color:black;
+
+.header .title {
+  margin-left: 30px;
+}
+
+
+.header .developer {
+  color: black;
   font-size: 15px;
   margin-left: 20px;
-  align-self:flex-end;
+  align-self: flex-end;
   margin-bottom: 15px;
 }
-header .search{
-  width: 40%;
+
+.header .search-div {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header .search {
+  width: 60%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-header .search input[type=text]{
-  width:95%;
+
+.header .search input[type=text] {
+  width: 95%;
   height: 45%;
   border-radius: 10px;
   border-style: none;
   color: black;
   font-size: 20px;
 }
-header .search input[type=submit]{
-  width: 80px;
+
+.header .search input[type=submit] {
+  width: 70px;
   height: 50%;
   margin-left: 10px;
+  padding: 0.5rem;
+  font-size: 1rem;
   background-color: black;
-  color:white;
+  color: white;
   border-radius: 10px;
   border-style: none;
   font-weight: bold;
+  cursor: pointer;
 }
-header .developer a:link, a:visited, a:hover{
+
+.header .developer a:link,
+a:visited,
+a:hover {
   text-decoration: none;
-  color:white;
+  color: white;
 }
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 .leaflet-container {
   width: 100%;
   background-color: black;
 }
-.leaflet-tooltip{
+
+.leaflet-tooltip {
   background-color: #ffffff80;
   font-weight: bold;
   border-radius: 5px;
-  border:none;
+  border: none;
   padding: 10px;
   padding-left: 15px;
   padding-right: 15px;
 }
-.leaflet-tooltip-top{
+
+.leaflet-tooltip-top {
   background-color: #ffffff;
 }
-.leaflet-tooltip-bottom:before{
+
+.leaflet-tooltip-bottom:before {
   display: none;
 }
-.leaflet-tooltip-bottom{
+
+.leaflet-tooltip-bottom {
   margin-top: -20px;
 }
-.leaflet-popup-content{
+
+.leaflet-popup-content {
   text-align: center;
 }
-header .historyClose{
+
+.header .historyClose {
   width: 20%;
   height: 100%;
-  top:89px;
-  right: 0;;display: none;
+  top: 89px;
+  right: 0;
+  ;
+  display: none;
   z-index: 999;
   background-color: #1e304f;
   overflow: auto;
 }
-header .historyOpen{
+
+.header .historyOpen {
   width: 20%;
   height: 100vh;
-  top:89px;
-  right: 0;;
+  top: 4rem;
+  right: 0;
   position: absolute;
   z-index: 999;
   background-color: #1e304f;
   overflow: auto;
 }
-.historyList{
-  padding:20px;
+
+.historyList {
+  padding: 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-items:center;
+  justify-items: center;
   cursor: pointer;
 }
-.historyList img{
+
+.historyList img {
   width: 35px;
   height: 35px;
   margin-right: 10px;
 }
-.historyList .latlng{
+
+.historyList .latlng {
   font-size: 12px;
 
 }
-.historyList .cbcCode{
+
+.historyList .cbcCode {
   font-size: 18px;
 }
-.toggleBtn{
-  width: 100px;
-  height: 50px;
-  margin-right: 20px;
+
+.toggleBtn {
+  width: fit-content;
+  height: 50%;
+  padding: 0.5rem 1rem;
+  margin: 0 20px;
   border-radius: 20px;
   background-color: #ffffff;
-  font-size: 18px;
   border: none;
   transition: all 0.5s;
   cursor: pointer;
 }
-.toggleBtn:hover{
+
+.toggleBtn:hover {
   color: black;
 }
+
 /* 오른쪽 하단 attribution 숨기기 */
-.leaflet-control-attribution{
+.leaflet-control-attribution {
   display: none;
 }
+
 .leaflet-control-zoom {
   display: none;
 }
-@media all and (max-width:1200px){
-  header .historyOpen{
+
+@media all and (max-width:1200px) {
+  .header .historyOpen {
     width: 25%;
   }
-  header .historyClose{
-    width : 25%;
+
+  .header .historyClose {
+    width: 25%;
   }
-  header .search{
-    width: 50%;
+
+  .header .search {
+    width: 70%;
   }
 }
-@media all and (max-width:800px){
-  header{
+
+@media all and (max-width:800px) {
+  .header {
     height: 70px;
   }
-  header .leftMenu{
+
+  .header .leftMenu {
     flex-direction: column;
     justify-content: flex-end;
   }
-  header .title{
-    width:100%;
+
+  .header .title {
+    width: 100%;
     margin-left: 12px;
     font-size: 18px;
   }
-  header .developer{
+
+  .header .developer {
     font-size: 10px;
   }
-  header .search{
-    width: 70%;
+
+  .header .search {
     margin-left: 5px;
   }
-  header .search input[type=text]{
+
+  .header .search input[type=text] {
     font-size: 13px;
   }
-  header .search input[type=submit]{
+
+  .header .search input[type=submit] {
     font-size: 10px;
     width: 50px;
     margin-right: 10px;
   }
-  header .toggleBtn{
+
+  .header .toggleBtn {
     display: none;
   }
-  header .historyOpen{
+
+  .header .historyOpen {
     top: 60px;
     height: 25vh;
     width: 100%;
   }
-  header .historyClose{
+
+  .header .historyClose {
     top: 60px;
   }
 }
