@@ -38,13 +38,14 @@ function App() {
       _historyList = [sameValue[0], ...otherValueList];
     }
     setLatLng({
-      lat:_lat,
-      lng:_lng
+      lat: _lat,
+      lng: _lng
     });
     setZoomLevel(_zoomLevel);
     setMenuState(_menuState);
     setHistoryList(_historyList);
   };
+
   return (
     <div className="App">
       <Header
@@ -54,9 +55,10 @@ function App() {
         setMenuState={setMenuState}
       ></Header>
       <Maps
-        latLng = {latLng}
+        latLng={latLng}
         menuState={menuState}
         zoomLevel={zoomLevel}
+        setLatLng={setLatLng}
         setMenuState={setMenuState}
         setZoomLevel={setZoomLevel}
       ></Maps>

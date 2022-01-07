@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import {
   MapContainer,
   MapConsumer,
@@ -14,8 +14,8 @@ import CbcConvert from "./CbcConvert";
 import { useState } from "react";
 import { LatLng } from "leaflet";
 
-function ZoomLevelCheck(props) {
-  const [zoomLevel, setZoomLevel] = useState(props.zoomLevel); // initial zoom level provided for MapContainer
+function ZoomLevelCheck({ zoomLevel, setMenuState }) {
+  const [mapZoomLevel, setMapZoomLevel] = useState(zoomLevel); // initial zoom level provided for MapContainer
   var [lineArr, setLineArr] = useState([]);
   const map = useMap();
   var state = true; // 초기화 시 한번만 실행하기 위한 state 변수
@@ -23,11 +23,11 @@ function ZoomLevelCheck(props) {
   const mapEvents = useMapEvents({
     // 지도 zoom 종료
     zoomend: () => {
-      setZoomLevel(mapEvents.getZoom());
-      props.setMenuState(false);
+      setMapZoomLevel(mapEvents.getZoom());
+      setMenuState(false);
       setLineArr(
         CbcConvert.lineArray(
-          zoomLevel,
+          mapZoomLevel,
           map.getBounds()._southWest,
           map.getBounds()._northEast
         )
@@ -37,7 +37,7 @@ function ZoomLevelCheck(props) {
     moveend: () => {
       setLineArr(
         CbcConvert.lineArray(
-          zoomLevel,
+          mapZoomLevel,
           map.getBounds()._southWest,
           map.getBounds()._northEast
         )
@@ -45,7 +45,7 @@ function ZoomLevelCheck(props) {
     },
     // 스크롤로 이동할 때 false
     dragstart: () => {
-      props.setMenuState(false);
+      setMenuState(false);
     },
   });
 
@@ -53,7 +53,7 @@ function ZoomLevelCheck(props) {
     if (state) {
       // 전체지도에 대한 grid array 그리기
       lineArr = CbcConvert.lineArray(
-        zoomLevel,
+        mapZoomLevel,
         map.getBounds()._southWest,
         map.getBounds()._northEast
       );
@@ -89,68 +89,52 @@ function ZoomLevelCheck(props) {
     return null;
   }
 }
-class Maps extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
-
-  // 검색으로 인해 lat, lng 값이 변경 됐을 경우에만 props 업데이트
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.lat !== nextProps.lat || this.props.lng !== nextProps.lng) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  render() {
-    const position = [this.props.latLng.lat, this.props.latLng.lng];
-    const cbc = CbcConvert.converterToCbc([this.props.latLng.lng, this.props.latLng.lat]);
-    const cbcTxt = cbc[0] + " " + cbc[1] + " " + cbc[2];
-    return (
-      <div className="contents">
-        <MapContainer
-          style={{ height: "100vh" }}
-          center={position}
-          zoom={this.props.zoomLevel}
-          scrollWheelZoom={true}
-        >
-          <TileLayer
-            maxZoom={22}
-            maxNativeZoom={18}
-            zoom={this.props.zoomLevel}
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png"
-          />
-          <ZoomLevelCheck
-            zoomLevel={this.props.zoomLevel}
-            setMenuState={this.props.setMenuState}
-          />
-          <MapConsumer>
-            {(map) => {
-              // 헤더로부터 입력받은 값을 업데이트
-              map.setView(
-                new LatLng(this.props.latLng.lat, this.props.latLng.lng),
-                this.props.zoomLevel
-              );
-              return null;
-            }}
-          </MapConsumer>
-          <Marker position={position}>
-            <Popup>
-              <span className="popupSpan">
-                <b>{cbcTxt}</b>
-                <br />
-                {this.props.latLng.lat}, {this.props.latLng.lng}
-              </span>
-            </Popup>
-          </Marker>
-        </MapContainer>
-      </div>
-    );
-  }
+const Maps = ({ latLng, zoomLevel, setMenuState }) => {
+  const [position, setPosition] = useState([latLng.lat, latLng.lng]);
+  const cbc = CbcConvert.converterToCbc([latLng.lng, latLng.lat]);
+  useEffect(() => {
+    setPosition([latLng.lat, latLng.lng]);
+  }, [latLng]);
+  return (
+    <div className="contents">
+      <MapContainer
+        style={{ height: "100vh" }}
+        center={position}
+        zoom={zoomLevel}
+        scrollWheelZoom={true}
+      >
+        <TileLayer
+          maxZoom={22}
+          maxNativeZoom={18}
+          zoom={zoomLevel}
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png"
+        />
+        <ZoomLevelCheck
+          zoomLevel={zoomLevel}
+          setMenuState={setMenuState}
+        />
+        <MapConsumer>
+          {(map) => {
+            // 헤더로부터 입력받은 값을 업데이트
+            map.setView(
+              new LatLng(latLng.lat, latLng.lng),
+              zoomLevel
+            );
+            return null;
+          }}
+        </MapConsumer>
+        <Marker position={position}>
+          <Popup>
+            <span className="popupSpan">
+              <b>{`${cbc[0]} ${cbc[1]} ${cbc[2]}`}</b>
+              <br />
+              {latLng.lat}, {latLng.lng}
+            </span>
+          </Popup>
+        </Marker>
+      </MapContainer>
+    </div>
+  );
 }
-
 export default Maps;
