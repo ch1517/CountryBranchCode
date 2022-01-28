@@ -1,3 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
+Sitemap: https://ch1517.github.io/CountryBranchCode/sitemap.xml
 User-agent: *
+Allow: /
 Disallow:
