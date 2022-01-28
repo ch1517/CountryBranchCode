@@ -1,17 +1,23 @@
 import "../App.css";
-import { React, useState } from "react";
+import React, { useState } from "react";
 import CbcConvert from "./CbcConvert";
 
-function Header({ menuState, historyList, setAppState, setMenuState }) {
-  const [submitValue, setSubmitValue] = useState(""); // 검색창에 입력한 값
+interface HeaderProps {
+  menuState: boolean;
+  historyList: any[];
+  setAppState: (lat: number, lng: number, cbcText: string, zoomLevel: number | null, menuState: boolean) => void;
+  setMenuState: (menuState: boolean) => void;
+}
+const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMenuState }) => {
+  const [submitValue, setSubmitValue] = useState<string>(""); // 검색창에 입력한 값
 
   // 검색 버튼을 눌렀을 때 호출되는 handler
-  const pushToApp = (event) => {
+  const pushToApp = (event: any) => {
     // 기존의 form event를 막는다.
     event.preventDefault();
 
-    var s = submitValue.split(",");
-    var _lat, _lng;
+    let s: string[] = submitValue.split(",");
+    let _lat: number, _lng: number;
     // lat, lng 으로 주어질 때
     if (s.length === 2) {
       _lat = parseFloat(s[0]);
@@ -40,10 +46,10 @@ function Header({ menuState, historyList, setAppState, setMenuState }) {
       // 국가지점번호로 주어질 때
       if (s.length === 3) {
         //s[0]가 문자, s[1],s[2]가 숫자가 아닌 경우
-        if (!isNaN(s[0]) || isNaN(s[1]) || isNaN(s[2])) {
+        if (typeof s[0] !== "string" || typeof parseInt(s[1]) !== "number" || typeof parseInt(s[2]) !== "number") {
           alert("ex. '가가 1234 1234'");
         } else {
-          var latLng = CbcConvert.converterToLatLng(submitValue);
+          var latLng: any = CbcConvert.converterToLatLng(submitValue);
           if (latLng === -1) {
             // converterToLatLng Error
             alert("ex. 가가 1234 1234");
@@ -72,16 +78,17 @@ function Header({ menuState, historyList, setAppState, setMenuState }) {
       setMenuState(true);
     }
   };
-  const makeHistory = (historyArr, setAppState) => {
+  const makeHistory = (historyArr: any[], setAppState: any) => {
     return (
       <div>
-        {historyArr.map(({ lng, lat, cbcCode }) => {
+        {historyArr.map(({ lng, lat, cbcCode }, index) => {
           return (
             <div
-              key={cbcCode}
+              key={index}
               className="historyList"
               onClick={(event) => {
                 setAppState(lat, lng, cbcCode, null, true);
+                setSubmitValue(cbcCode);
               }}
             >
               <img src="/CountryBranchCode/images/marker.png" alt="" />
@@ -131,4 +138,4 @@ function Header({ menuState, historyList, setAppState, setMenuState }) {
   );
 }
 
-export default Header;
+export default App;

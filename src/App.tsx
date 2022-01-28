@@ -4,18 +4,22 @@ import Header from "./modules/Header";
 import React from "react";
 import { useState } from "react";
 
+interface LatLngInterface {
+  lat: number;
+  lng: number;
+}
 function App() {
-  const [latLng, setLatLng] = useState({
+  const [latLng, setLatLng] = useState<LatLngInterface>({
     lat: 36.37216,
     lng: 127.36035
   });
-  const [zoomLevel, setZoomLevel] = useState(7);
-  const [menuState, setMenuState] = useState(false); // history menu toggle
-  const [historyList, setHistoryList] = useState([]); // history list
+  const [zoomLevel, setZoomLevel] = useState<number>(7);
+  const [menuState, setMenuState] = useState<boolean>(false); // history menu toggle
+  const [historyList, setHistoryList] = useState<any[]>([]); // history list
 
   //App.js의 state 생성
-  const setAppState = (_lat, _lng, _cbcCode, _zoomLevel, _menuState) => {
-    var _historyList = [...historyList];
+  const setAppState = (_lat: number, _lng: number, _cbcCode: string, _zoomLevel: number | null, _menuState: boolean) => {
+    var _historyList: any[] = [...historyList];
     if (_zoomLevel === null) {
       _zoomLevel = 21;
     }
@@ -56,11 +60,8 @@ function App() {
       ></Header>
       <Maps
         latLng={latLng}
-        menuState={menuState}
         zoomLevel={zoomLevel}
-        setLatLng={setLatLng}
         setMenuState={setMenuState}
-        setZoomLevel={setZoomLevel}
       ></Maps>
     </div>
   );

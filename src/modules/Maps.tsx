@@ -14,9 +14,18 @@ import CbcConvert from "./CbcConvert";
 import { useState } from "react";
 import { LatLng } from "leaflet";
 
-function ZoomLevelCheck({ zoomLevel, setMenuState }) {
-  const [mapZoomLevel, setMapZoomLevel] = useState(zoomLevel); // initial zoom level provided for MapContainer
-  var [lineArr, setLineArr] = useState([]);
+interface LatLngInterface {
+  lat: number;
+  lng: number;
+}
+
+interface ZoomLevelCheckProps {
+  zoomLevel: number;
+  setMenuState: (menuState: boolean) => void;
+}
+const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState }) => {
+  const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel); // initial zoom level provided for MapContainer
+  var [lineArr, setLineArr] = useState<any[]>([]);
   const map = useMap();
   var state = true; // 초기화 시 한번만 실행하기 위한 state 변수
 
@@ -28,8 +37,8 @@ function ZoomLevelCheck({ zoomLevel, setMenuState }) {
       setLineArr(
         CbcConvert.lineArray(
           mapZoomLevel,
-          map.getBounds()._southWest,
-          map.getBounds()._northEast
+          map.getBounds().getSouthWest(),
+          map.getBounds().getNorthEast()
         )
       );
     },
@@ -38,8 +47,8 @@ function ZoomLevelCheck({ zoomLevel, setMenuState }) {
       setLineArr(
         CbcConvert.lineArray(
           mapZoomLevel,
-          map.getBounds()._southWest,
-          map.getBounds()._northEast
+          map.getBounds().getSouthWest(),
+          map.getBounds().getNorthEast()
         )
       );
     },
@@ -49,13 +58,13 @@ function ZoomLevelCheck({ zoomLevel, setMenuState }) {
     },
   });
 
-  map.whenReady(function (e) {
+  map.whenReady(() => {
     if (state) {
       // 전체지도에 대한 grid array 그리기
       lineArr = CbcConvert.lineArray(
         mapZoomLevel,
-        map.getBounds()._southWest,
-        map.getBounds()._northEast
+        map.getBounds().getSouthWest(),
+        map.getBounds().getNorthEast()
       );
       state = false;
     }
@@ -89,8 +98,13 @@ function ZoomLevelCheck({ zoomLevel, setMenuState }) {
     return null;
   }
 }
-const Maps = ({ latLng, zoomLevel, setMenuState }) => {
-  const [position, setPosition] = useState([latLng.lat, latLng.lng]);
+interface MapsProps {
+  latLng: LatLngInterface;
+  zoomLevel: number;
+  setMenuState: (menuState: boolean) => void;
+}
+const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
+  const [position, setPosition] = useState<any>([latLng.lat, latLng.lng]);
   const cbc = CbcConvert.converterToCbc([latLng.lng, latLng.lat]);
   useEffect(() => {
     setPosition([latLng.lat, latLng.lng]);
@@ -106,7 +120,7 @@ const Maps = ({ latLng, zoomLevel, setMenuState }) => {
         <TileLayer
           maxZoom={22}
           maxNativeZoom={18}
-          zoom={zoomLevel}
+          // zoom={zoomLevel}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png"
         />
