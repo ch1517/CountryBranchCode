@@ -151,4 +151,4 @@ const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
     </div>
   );
 }
-export default Maps;
+export default React.memo(Maps);

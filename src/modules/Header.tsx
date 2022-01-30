@@ -1,6 +1,6 @@
 import "../App.css";
 import React, { useState } from "react";
-import CbcConvert from "./CbcConvert";
+import CbcConvert, { h, w } from "./CbcConvert";
 
 interface HeaderProps {
   menuState: boolean;
@@ -9,14 +9,14 @@ interface HeaderProps {
   setMenuState: (menuState: boolean) => void;
 }
 const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMenuState }) => {
-  const [submitValue, setSubmitValue] = useState<string>(""); // 검색창에 입력한 값
+  const [searchText, setSearchText] = useState<string>(""); // 검색창에 입력한 값
 
   // 검색 버튼을 눌렀을 때 호출되는 handler
   const pushToApp = (event: any) => {
     // 기존의 form event를 막는다.
     event.preventDefault();
 
-    let s: string[] = submitValue.split(",");
+    let s: string[] = searchText.split(",");
     let _lat: number, _lng: number;
     // lat, lng 으로 주어질 때
     if (s.length === 2) {
@@ -42,14 +42,20 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
         );
       }
     } else {
-      s = submitValue.split(" ");
+      s = searchText.split(" ");
       // 국가지점번호로 주어질 때
       if (s.length === 3) {
-        //s[0]가 문자, s[1],s[2]가 숫자가 아닌 경우
-        if (typeof s[0] !== "string" || typeof parseInt(s[1]) !== "number" || typeof parseInt(s[2]) !== "number") {
+        //s[0](ex.가나)가 문자이며 두 글자이고, 범위 안에 해당될 때
+        let check1 = typeof s[0] === "string" && s[0].length === 2
+          && Object.values(w).includes(s[0][0]) && Object.values(h).includes(s[0][1]);
+        // s[1],s[2]는 숫자이면서 네 자리
+        let check2 = typeof parseInt(s[1]) === "number" && s[1].length === 4;
+        let check3 = typeof parseInt(s[2]) === "number" && s[2].length === 4;
+        if (!check1 || !check2 || !check3) {
           alert("ex. '가가 1234 1234'");
+          return;
         } else {
-          var latLng: any = CbcConvert.converterToLatLng(submitValue);
+          var latLng: any = CbcConvert.converterToLatLng(searchText);
           if (latLng === -1) {
             // converterToLatLng Error
             alert("ex. 가가 1234 1234");
@@ -58,7 +64,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
             _lng = latLng[0];
             _lat = latLng[1];
             // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
-            setAppState(_lat, _lng, submitValue, null, true);
+            setAppState(_lat, _lng, searchText, null, true);
           }
         }
       } else {
@@ -88,7 +94,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
               className="historyList"
               onClick={(event) => {
                 setAppState(lat, lng, cbcCode, null, true);
-                setSubmitValue(cbcCode);
+                setSearchText(cbcCode);
               }}
             >
               <img src="/CountryBranchCode/images/marker.png" alt="" />
@@ -118,9 +124,10 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
             onFocus={menuSateChangeMobile}
             onBlur={menuSateChangeMobile}
             type="text"
+            value={searchText}
             placeholder="32.66367, 124.43291 or 가가 1234 1234"
             // 검색창에 입력하는 값이 달라질 때마다 호출되는 handler
-            onChange={(event) => setSubmitValue(event.target.value)}
+            onChange={(event) => setSearchText(event.target.value)}
           />
           <input type="submit" value="검색"></input>
           <div
