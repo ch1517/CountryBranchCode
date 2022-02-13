@@ -174,15 +174,15 @@ const labelText = (d: number, text: [string, number, number]): string => {
     case 1000:
       t1 = Math.floor(text[1] / 100).toString();
       t2 = Math.floor(text[2] / 100).toString();
-      returnTxt = `${text[0]} ${t1}XX ${t2}XX`;
+      returnTxt = `${text[0]} ${t1.toString().padStart(2, '0')}XX ${t2.toString().padStart(2, '0')}XX`;
       break;
     case 100:
       t1 = Math.floor(text[1] / 10).toString();
       t2 = Math.floor(text[2] / 10).toString();
-      returnTxt = `${text[0]} ${t1}X ${t2}X`;
+      returnTxt = `${text[0]} ${t1.toString().padStart(3, '0')}X ${t2.toString().padStart(3, '0')}X`;
       break;
     case 10:
-      returnTxt = `${text[0]} ${text[1]} ${text[2]}`;
+      returnTxt = `${text[0]} ${text[1].toString().padStart(4, '0')} ${text[2].toString().padStart(4, '0')}`;
       break;
     default:
       break;
