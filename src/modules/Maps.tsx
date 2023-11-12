@@ -122,7 +122,7 @@ const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
           maxNativeZoom={18}
           // zoom={zoomLevel}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://api.vworld.kr/req/wmts/1.0.0/B68996E4-BC0C-3C4A-B658-93658DD96E73/midnight/{z}/{y}/{x}.png"
+          url="https://api.vworld.kr/req/wmts/1.0.0/532CA96F-C19D-3423-A745-FA04E44726C4/midnight/{z}/{y}/{x}.png"
         />
         <ZoomLevelCheck
           zoomLevel={zoomLevel}
