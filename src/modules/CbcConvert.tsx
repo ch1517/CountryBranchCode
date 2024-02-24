@@ -1,26 +1,25 @@
-import proj4 from "proj4";
+import proj4 from 'proj4';
 interface CBCObject {
-  [key: number]: string
+  [key: number]: string;
 }
 interface LatLng {
   lat: number;
   lng: number;
 }
-export const w: CBCObject = { 7: "가", 8: "나", 9: "다", 10: "라", 11: "마", 12: "바", 13: "사" };
+export const w: CBCObject = { 7: '가', 8: '나', 9: '다', 10: '라', 11: '마', 12: '바', 13: '사' };
 export const h: CBCObject = {
-  13: "가",
-  14: "나",
-  15: "다",
-  16: "라",
-  17: "마",
-  18: "바",
-  19: "사",
-  20: "아",
+  13: '가',
+  14: '나',
+  15: '다',
+  16: '라',
+  17: '마',
+  18: '바',
+  19: '사',
+  20: '아',
 };
 const grs80: string =
-  "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
-const wgs84: string =
-  "+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees";
+  '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs';
+const wgs84: string = '+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees';
 
 /**
  * 위경도 좌표 -> 국가지점번호
@@ -29,23 +28,23 @@ const wgs84: string =
  */
 const converterToCbc = (codinate: [number, number]): [string, number, number] => {
   let grs80P = proj4(wgs84, grs80, codinate);
-  let wP: number = parseInt(grs80P[0].toString().split(".")[0]);
-  let hP: number = parseInt(grs80P[1].toString().split(".")[0]);
+  let wP: number = parseInt(grs80P[0].toString().split('.')[0]);
+  let hP: number = parseInt(grs80P[1].toString().split('.')[0]);
   let code: [string, number, number] = [
     w[Math.floor(Math.floor(wP) / 100000)] + h[Math.floor(Math.floor(hP) / 100000)],
     Math.floor((wP % 100000) / 10),
     Math.floor((hP % 100000) / 10),
   ];
   return code;
-}
-// 
+};
+//
 /**
  * 국가지점번호 -> 위경도 좌표
  * @param _cbcCode 국가지점번호
  * @returns {[number,number]} 위경도좌표
  */
 const converterToLatLng = (_cbcCode: string): [number, number] | number => {
-  const cbcCode: string[] = _cbcCode.split(" ");
+  const cbcCode: string[] = _cbcCode.split(' ');
   let lat: number | null | undefined, lng: number | null | undefined;
   // ex "가나 1234 5678"
   // "가나"의 "가" value의 key 확인
@@ -66,26 +65,22 @@ const converterToLatLng = (_cbcCode: string): [number, number] | number => {
   } else {
     // lat*100000+1234+5(marker의 중앙을 맞춰주기 위해서), lng도 동일한 로직
     const length = cbcCode[1].length + 1;
-    lat = Math.pow(10, length) * lat! +
-      parseInt(cbcCode[1]) * Math.pow(10, 6 - length) +
-      5;
-    lng = Math.pow(10, length) * lng! +
-      parseInt(cbcCode[2]) * Math.pow(10, 6 - length) +
-      5;
+    lat = Math.pow(10, length) * lat! + parseInt(cbcCode[1]) * Math.pow(10, 6 - length) + 5;
+    lng = Math.pow(10, length) * lng! + parseInt(cbcCode[2]) * Math.pow(10, 6 - length) + 5;
 
-    var wgs84P: [number, number] = proj4(grs80, wgs84, [lat, lng]);
+    let wgs84P: [number, number] = proj4(grs80, wgs84, [lat, lng]);
     return wgs84P;
   }
-}
+};
 // grid 배열 생성
 /**
- * 
- * @param m 
+ *
+ * @param m
  * @param minX minimum X position
  * @param maxX max X position
  * @param minY minimum Y position
  * @param maxY max Y position
- * @returns 
+ * @returns
  */
 const smallPointXY = (m: number, minX: number, maxX: number, minY: number, maxY: number): any[] => {
   let p: [number, number];
@@ -97,37 +92,25 @@ const smallPointXY = (m: number, minX: number, maxX: number, minY: number, maxY:
   minY = minY > 13 * TKM ? minY : 13 * TKM;
   maxY = maxY > 22 * TKM ? 22 * TKM : maxY;
 
-  minX =
-    Math.floor(minX / m) * m < minX
-      ? (Math.floor(minX / m) - 1) * m
-      : Math.floor(minX / m) * m;
-  minY =
-    Math.floor(minY / m) * m < minY
-      ? (Math.floor(minY / m) - 1) * m
-      : Math.floor(minY / m) * m;
-  maxX =
-    Math.floor(maxX / m) * m < maxX
-      ? (Math.floor(maxX / m) + 1) * m
-      : Math.floor(maxX / m) * m;
-  maxY =
-    Math.floor(maxY / m) * m < maxY
-      ? (Math.floor(maxY / m) + 1) * m
-      : Math.floor(maxY / m) * m;
+  minX = Math.floor(minX / m) * m < minX ? (Math.floor(minX / m) - 1) * m : Math.floor(minX / m) * m;
+  minY = Math.floor(minY / m) * m < minY ? (Math.floor(minY / m) - 1) * m : Math.floor(minY / m) * m;
+  maxX = Math.floor(maxX / m) * m < maxX ? (Math.floor(maxX / m) + 1) * m : Math.floor(maxX / m) * m;
+  maxY = Math.floor(maxY / m) * m < maxY ? (Math.floor(maxY / m) + 1) * m : Math.floor(maxY / m) * m;
 
   let pArr: any[] = [];
-  for (var x = minX; x <= maxX; x += m) {
+  for (let x = minX; x <= maxX; x += m) {
     let t: any[] = [];
-    for (var y = minY; y <= maxY; y += m) {
+    for (let y = minY; y <= maxY; y += m) {
       p = proj4(grs80, wgs84, [x, y]);
       t.push(p);
     }
     pArr.push(t);
   }
   return pArr;
-}
+};
 /**
  * grid 모양을 한국 지도에 맞게 보여주기 위한 필터링 작업
- * @param codinate 
+ * @param codinate
  * @returns {boolean}
  */
 const isInnerinBound = (codinate: [number, number]) => {
@@ -148,11 +131,10 @@ const isInnerinBound = (codinate: [number, number]) => {
 
   let t = Math.floor(grs80P[0] / TKM);
   if (filter[t] !== undefined) {
-    if (grs80P[1] >= filter[t][0] * TKM && grs80P[1] < filter[t][1] * TKM)
-      return true;
+    if (grs80P[1] >= filter[t][0] * TKM && grs80P[1] < filter[t][1] * TKM) return true;
   }
   return false;
-}
+};
 /**
  * 각각의 grid에 표시할 Label Text 생성 작업
  * @param d 배율(100000|10000|1000|100|10)
@@ -160,7 +142,7 @@ const isInnerinBound = (codinate: [number, number]) => {
  * @returns {string}
  */
 const labelText = (d: number, text: [string, number, number]): string => {
-  let returnTxt: string = "";
+  let returnTxt: string = '';
   let t1, t2;
   switch (d) {
     case 100000:
@@ -188,13 +170,13 @@ const labelText = (d: number, text: [string, number, number]): string => {
       break;
   }
   return returnTxt;
-}
+};
 /**
  * grid를 그리는 작업
  * @param {number} zoomLevel zoom level
  * @param {LatLng} _start start lat, lng 좌표
  * @param {LatLng} _end  end lat, lng 좌표
- * @returns 
+ * @returns
  */
 const lineArray = (zoomLevel: number, _start: LatLng, _end: LatLng) => {
   let reArr = [];
@@ -228,7 +210,7 @@ const lineArray = (zoomLevel: number, _start: LatLng, _end: LatLng) => {
           let ny = pArr[i][j + 1];
           let nxy = pArr[i + 1][j + 1];
           let cbc: [string, number, number] = converterToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2]);
-          let cbcText: string = "";
+          let cbcText: string = '';
           if (cbc !== undefined) {
             cbcText = labelText(divide, cbc);
           }
@@ -239,7 +221,7 @@ const lineArray = (zoomLevel: number, _start: LatLng, _end: LatLng) => {
               [nxy[1], nxy[0]],
               [ny[1], ny[0]],
             ],
-            id: zoomLevel.toString() + "." + pArr[i][j] + "y",
+            id: zoomLevel.toString() + '.' + pArr[i][j] + 'y',
             cbcText: cbcText,
           });
         }
@@ -248,7 +230,6 @@ const lineArray = (zoomLevel: number, _start: LatLng, _end: LatLng) => {
   }
 
   return reArr;
-}
+};
 const exportedObject = { converterToCbc, lineArray, converterToLatLng };
 export default exportedObject;
-
