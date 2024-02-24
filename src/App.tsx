@@ -4,13 +4,10 @@ import Header from './components/Header';
 import React from 'react';
 import { useState } from 'react';
 import { MapState } from './types/Header';
+import { LatLngType } from './types/convertCBC';
 
-interface LatLngInterface {
-  lat: number;
-  lng: number;
-}
 function App() {
-  const [latLng, setLatLng] = useState<LatLngInterface>({
+  const [latLng, setLatLng] = useState<LatLngType>({
     lat: 36.37216,
     lng: 127.36035,
   });

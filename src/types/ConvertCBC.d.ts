@@ -1,7 +1,7 @@
 export type CBCObject = {
   [key: number]: string;
 };
-export type LatLng = {
+export type LatLngType = {
   lat: number;
   lng: number;
 };
