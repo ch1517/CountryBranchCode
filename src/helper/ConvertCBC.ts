@@ -1,28 +1,14 @@
 import proj4 from 'proj4';
-import { CBCObject } from '../types/ConvertCBC';
 import { LatLng } from 'leaflet';
-
-export const w: CBCObject = { 7: '가', 8: '나', 9: '다', 10: '라', 11: '마', 12: '바', 13: '사' };
-export const h: CBCObject = {
-  13: '가',
-  14: '나',
-  15: '다',
-  16: '라',
-  17: '마',
-  18: '바',
-  19: '사',
-  20: '아',
-};
-const grs80: string =
-  '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs';
-const wgs84: string = '+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees';
+import { grs80, wgs84 } from '../constants/map';
+import { h, w } from '../constants/cbc';
 
 /**
  * 위경도 좌표 -> 국가지점번호
  * @param codinate 위경도 좌표
  * @returns {string,number,number} 국가지점번호 ["가나",1234,1235]
  */
-const converterToCbc = (codinate: [number, number]): [string, number, number] => {
+const convertToCbc = (codinate: [number, number]): [string, number, number] => {
   let grs80P = proj4(wgs84, grs80, codinate);
   let wP: number = parseInt(grs80P[0].toString().split('.')[0]);
   let hP: number = parseInt(grs80P[1].toString().split('.')[0]);
@@ -39,7 +25,7 @@ const converterToCbc = (codinate: [number, number]): [string, number, number] =>
  * @param _cbcCode 국가지점번호
  * @returns {[number,number]} 위경도좌표
  */
-const converterToLatLng = (_cbcCode: string): [number, number] | number => {
+const convertToLatLng = (_cbcCode: string): [number, number] | number => {
   const cbcCode: string[] = _cbcCode.split(' ');
   let lat: number | null | undefined, lng: number | null | undefined;
   // ex "가나 1234 5678"
@@ -205,7 +191,7 @@ const lineArray = (zoomLevel: number, _start: LatLng, _end: LatLng) => {
           let nx = pArr[i + 1][j];
           let ny = pArr[i][j + 1];
           let nxy = pArr[i + 1][j + 1];
-          let cbc: [string, number, number] = converterToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2]);
+          let cbc: [string, number, number] = convertToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2]);
           let cbcText: string = '';
           if (cbc !== undefined) {
             cbcText = labelText(divide, cbc);
@@ -227,5 +213,5 @@ const lineArray = (zoomLevel: number, _start: LatLng, _end: LatLng) => {
 
   return reArr;
 };
-const exportedObject = { converterToCbc, lineArray, converterToLatLng };
-export default exportedObject;
+
+export { convertToCbc, lineArray, convertToLatLng };

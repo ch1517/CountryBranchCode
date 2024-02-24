@@ -10,10 +10,10 @@ import {
   useMap,
   useMapEvents,
 } from 'react-leaflet';
-import CbcConvert from '../helper/ConvertCBC';
 import { useState } from 'react';
 import { LatLng } from 'leaflet';
 import { MapsProps, ZoomLevelCheckProps } from '../types/Maps';
+import { convertToCbc, lineArray } from '../helper/convertCBC';
 
 const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState }) => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel); // initial zoom level provided for MapContainer
@@ -26,11 +26,11 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
     zoomend: () => {
       setMapZoomLevel(mapEvents.getZoom());
       setMenuState(false);
-      setLineArr(CbcConvert.lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
+      setLineArr(lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
     },
     // 지도 움직임 종료
     moveend: () => {
-      setLineArr(CbcConvert.lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
+      setLineArr(lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
     },
     // 스크롤로 이동할 때 false
     dragstart: () => {
@@ -41,7 +41,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
   map.whenReady(() => {
     if (state) {
       // 전체지도에 대한 grid array 그리기
-      lineArr = CbcConvert.lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast());
+      lineArr = lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast());
       state = false;
     }
   });
@@ -57,7 +57,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
               color={'white'}
               eventHandlers={{
                 click: (e) => {
-                  CbcConvert.converterToCbc([e.latlng['lng'], e.latlng['lat']]);
+                  convertToCbc([e.latlng['lng'], e.latlng['lat']]);
                 },
               }}
             >
@@ -75,7 +75,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
 };
 const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
   const [position, setPosition] = useState<any>([latLng.lat, latLng.lng]);
-  const cbc = CbcConvert.converterToCbc([latLng.lng, latLng.lat]);
+  const cbc = convertToCbc([latLng.lng, latLng.lat]);
   useEffect(() => {
     setPosition([latLng.lat, latLng.lng]);
   }, [latLng]);

@@ -3,6 +3,7 @@ import Maps from './components/Maps';
 import Header from './components/Header';
 import React from 'react';
 import { useState } from 'react';
+import { MapState } from './types/Header';
 
 interface LatLngInterface {
   lat: number;
@@ -18,38 +19,33 @@ function App() {
   const [historyList, setHistoryList] = useState<any[]>([]); // history list
 
   //App.js의 state 생성
-  const setAppState = (
-    _lat: number,
-    _lng: number,
-    _cbcCode: string,
-    _zoomLevel: number | null,
-    _menuState: boolean,
-  ) => {
+  const setMapState = (mapState: MapState) => {
+    let { lat, lng, cbcCode, zoomLevel, menuState } = mapState;
     let _historyList: any[] = [...historyList];
-    if (_zoomLevel === null) {
-      _zoomLevel = 21;
+    if (zoomLevel === null) {
+      zoomLevel = 21;
     }
 
-    if (_lat === null) {
-      _lat = latLng.lat;
-    } else if (_lng === null) {
-      _lng = latLng.lng;
+    if (lat === null) {
+      lat = latLng.lat;
+    } else if (lng === null) {
+      lng = latLng.lng;
     } else {
       // history array 요소 중 lat, lng이 같은 값
-      let sameValue = _historyList.filter((item) => item.lat === _lat && item.lng === _lng);
+      let sameValue = _historyList.filter((item) => item.lat === lat && item.lng === lng);
       if (sameValue.length === 0) {
-        sameValue = [{ cbcCode: _cbcCode, lat: _lat, lng: _lng }];
+        sameValue = [{ cbcCode, lat, lng: lng }];
       }
-      const otherValueList = _historyList.filter((item) => item.lat !== _lat || item.lng !== _lng);
+      const otherValueList = _historyList.filter((item) => item.lat !== lat || item.lng !== lng);
       _historyList = [sameValue[0], ...otherValueList];
     }
     setLatLng({
-      lat: _lat,
-      lng: _lng,
+      lat,
+      lng,
     });
-    setZoomLevel(_zoomLevel);
-    setMenuState(_menuState);
-    setHistoryList(_historyList);
+    setZoomLevel(zoomLevel);
+    setMenuState(menuState);
+    setHistoryList(historyList);
   };
 
   return (
@@ -57,7 +53,7 @@ function App() {
       <Header
         menuState={menuState}
         historyList={historyList}
-        setAppState={setAppState}
+        setMapState={setMapState}
         setMenuState={setMenuState}
       ></Header>
       <Maps latLng={latLng} zoomLevel={zoomLevel} setMenuState={setMenuState}></Maps>
