@@ -1,13 +1,8 @@
 import "../assets/css/App.css";
 import React, { useState } from "react";
 import CbcConvert, { h, w } from "./CbcConvert";
+import { HeaderProps } from "../types/Header";
 
-interface HeaderProps {
-  menuState: boolean;
-  historyList: any[];
-  setAppState: (lat: number, lng: number, cbcText: string, zoomLevel: number | null, menuState: boolean) => void;
-  setMenuState: (menuState: boolean) => void;
-}
 const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMenuState }) => {
   const [searchText, setSearchText] = useState<string>(""); // 검색창에 입력한 값
 
