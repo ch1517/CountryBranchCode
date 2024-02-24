@@ -13,16 +13,8 @@ import {
 import CbcConvert from "./CbcConvert";
 import { useState } from "react";
 import { LatLng } from "leaflet";
+import { MapsProps, ZoomLevelCheckProps } from "../types/Maps";
 
-interface LatLngInterface {
-  lat: number;
-  lng: number;
-}
-
-interface ZoomLevelCheckProps {
-  zoomLevel: number;
-  setMenuState: (menuState: boolean) => void;
-}
 const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState }) => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel); // initial zoom level provided for MapContainer
   var [lineArr, setLineArr] = useState<any[]>([]);
@@ -97,11 +89,6 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
   } else {
     return null;
   }
-}
-interface MapsProps {
-  latLng: LatLngInterface;
-  zoomLevel: number;
-  setMenuState: (menuState: boolean) => void;
 }
 const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
   const [position, setPosition] = useState<any>([latLng.lat, latLng.lng]);
