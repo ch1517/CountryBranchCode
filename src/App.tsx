@@ -1,4 +1,4 @@
-import "./App.css";
+import "./assets/css/App.css";
 import Maps from "./modules/Maps";
 import Header from "./modules/Header";
 import React from "react";
