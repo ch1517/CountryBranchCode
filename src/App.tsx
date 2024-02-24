@@ -1,6 +1,6 @@
 import './assets/css/App.css';
-import Maps from './modules/Maps';
-import Header from './modules/Header';
+import Maps from './components/Maps';
+import Header from './components/Header';
 import React from 'react';
 import { useState } from 'react';
 

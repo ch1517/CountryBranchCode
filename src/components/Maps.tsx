@@ -10,7 +10,7 @@ import {
   useMap,
   useMapEvents,
 } from 'react-leaflet';
-import CbcConvert from './CbcConvert';
+import CbcConvert from '../helper/ConvertCBC';
 import { useState } from 'react';
 import { LatLng } from 'leaflet';
 import { MapsProps, ZoomLevelCheckProps } from '../types/Maps';
@@ -57,7 +57,6 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
               color={'white'}
               eventHandlers={{
                 click: (e) => {
-                  console.log([e.latlng['lat'], e.latlng['lng']]);
                   CbcConvert.converterToCbc([e.latlng['lng'], e.latlng['lat']]);
                 },
               }}

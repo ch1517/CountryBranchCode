@@ -1,11 +1,7 @@
 import proj4 from 'proj4';
-interface CBCObject {
-  [key: number]: string;
-}
-interface LatLng {
-  lat: number;
-  lng: number;
-}
+import { CBCObject } from '../types/ConvertCBC';
+import { LatLng } from 'leaflet';
+
 export const w: CBCObject = { 7: '가', 8: '나', 9: '다', 10: '라', 11: '마', 12: '바', 13: '사' };
 export const h: CBCObject = {
   13: '가',

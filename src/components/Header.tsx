@@ -1,6 +1,6 @@
 import '../assets/css/App.css';
 import React, { useState } from 'react';
-import CbcConvert, { h, w } from './CbcConvert';
+import CbcConvert, { h, w } from '../helper/ConvertCBC';
 import { HeaderProps } from '../types/Header';
 
 const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMenuState }) => {
@@ -80,7 +80,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
             <div
               key={index}
               className="historyList"
-              onClick={(event) => {
+              onClick={() => {
                 setAppState(lat, lng, cbcCode, null, true);
                 setSearchText(cbcCode);
               }}
