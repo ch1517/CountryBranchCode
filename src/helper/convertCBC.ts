@@ -1,6 +1,6 @@
 import proj4 from 'proj4';
 import { LatLngBounds } from 'leaflet';
-import { grs80, wgs84 } from '../constants/map';
+import { GRS80, WGS84 } from '../constants/map';
 import { h, w } from '../constants/cbc';
 
 /**
@@ -9,7 +9,7 @@ import { h, w } from '../constants/cbc';
  * @returns {string,number,number} 국가지점번호 ["가나",1234,1235]
  */
 const convertToCbc = (coordinate: [number, number]): [string, number, number] => {
-  let grs80P = proj4(wgs84, grs80, coordinate);
+  let grs80P = proj4(WGS84, GRS80, coordinate);
   let wP: number = parseInt(grs80P[0].toString().split('.')[0]);
   let hP: number = parseInt(grs80P[1].toString().split('.')[0]);
   let code: [string, number, number] = [
@@ -50,7 +50,7 @@ const convertToLatLng = (_cbcCode: string): [number, number] | number => {
     lat = Math.pow(10, length) * lat! + parseInt(cbcCode[1]) * Math.pow(10, 6 - length) + 5;
     lng = Math.pow(10, length) * lng! + parseInt(cbcCode[2]) * Math.pow(10, 6 - length) + 5;
 
-    let wgs84P: [number, number] = proj4(grs80, wgs84, [lat, lng]);
+    let wgs84P: [number, number] = proj4(GRS80, WGS84, [lat, lng]);
     return wgs84P;
   }
 };
@@ -83,7 +83,7 @@ const smallPointXY = (m: number, minX: number, maxX: number, minY: number, maxY:
   for (let x = minX; x <= maxX; x += m) {
     let t: any[] = [];
     for (let y = minY; y <= maxY; y += m) {
-      p = proj4(grs80, wgs84, [x, y]);
+      p = proj4(GRS80, WGS84, [x, y]);
       t.push(p);
     }
     pArr.push(t);
@@ -96,7 +96,7 @@ const smallPointXY = (m: number, minX: number, maxX: number, minY: number, maxY:
  * @returns {boolean}
  */
 const isInnerinBound = (codinate: [number, number]) => {
-  let grs80P = proj4(wgs84, grs80, codinate);
+  let grs80P = proj4(WGS84, GRS80, codinate);
   let TKM = 100000;
   let filter: any = {
     7: [13, 21],
@@ -163,8 +163,8 @@ const lineArray = (zoomLevel: number, latLngBounds: LatLngBounds) => {
   let reArr = [];
   const startLatLng = latLngBounds.getSouthWest();
   const endLatLng = latLngBounds.getNorthEast();
-  const startUTMK = proj4(wgs84, grs80, [startLatLng.lng, startLatLng.lat]);
-  const endUTMK = proj4(wgs84, grs80, [endLatLng.lng, endLatLng.lat]);
+  const startUTMK = proj4(WGS84, GRS80, [startLatLng.lng, startLatLng.lat]);
+  const endUTMK = proj4(WGS84, GRS80, [endLatLng.lng, endLatLng.lat]);
 
   // zoomLevel에 따라 grid 배열 생성을 다르게 한다.
   let divide: number = 100000;

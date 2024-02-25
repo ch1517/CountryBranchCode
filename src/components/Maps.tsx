@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { LatLng, LeafletMouseEvent } from 'leaflet';
 import { MapsProps, ZoomLevelCheckProps } from '../types/Maps';
 import { convertToCbc, lineArray } from '../helper/convertCBC';
+import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '../constants/map';
 
 const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState }) => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel); // initial zoom level provided for MapContainer
@@ -83,9 +84,8 @@ const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
     <div className="contents">
       <MapContainer style={{ height: '100vh' }} center={position} zoom={zoomLevel} scrollWheelZoom={true}>
         <TileLayer
-          maxZoom={22}
-          maxNativeZoom={18}
-          // zoom={zoomLevel}
+          maxZoom={MAX_ZOOM}
+          maxNativeZoom={MAX_NATIVE_ZOOM}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://api.vworld.kr/req/wmts/1.0.0/532CA96F-C19D-3423-A745-FA04E44726C4/midnight/{z}/{y}/{x}.png"
         />
