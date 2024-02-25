@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { h, w } from '../constants/cbc';
 import { HeaderProps } from '../types/Header';
 import { convertToCbc, convertToLatLng } from '../helper/convertCBC';
+import { validateLatLngRange } from '../helper/latlng';
 
 const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMenuState }) => {
   const [searchText, setSearchText] = useState<string>(''); // 검색창에 입력한 값
@@ -24,13 +25,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
     if (s.length === 2) {
       mapState.lat = parseFloat(s[0]);
       mapState.lng = parseFloat(s[1]);
-      // 만약 lat, lng 이 숫자가 아니고, 한국 지도 범위를 벗어났을 때
-      if (
-        isNaN(mapState.lat) ||
-        isNaN(mapState.lng) ||
-        !(mapState.lat > 31 && mapState.lat < 39) ||
-        !(mapState.lng > 124 && mapState.lng < 133)
-      ) {
+      if (!validateLatLngRange(mapState.lat, mapState.lng)) {
         alert("ex. '32.66367, 124.43291'");
       } else {
         let cbc = convertToCbc([mapState.lng, mapState.lat]);
