@@ -47,7 +47,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
     }
   });
 
-  if (lineArr.length !== 0) {
+  if (lineArr.length) {
     return (
       <div>
         {lineArr.map(({ id, latLongArr, cbcText }) => {

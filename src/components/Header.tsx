@@ -57,10 +57,8 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
             alert('ex. 가가 1234 1234');
           } else {
             // 그 외의 경우
-            mapState.lng = latLng[0];
-            mapState.lat = latLng[1];
             // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
-            setMapState({ ...mapState, cbcCode: searchText });
+            setMapState({ ...mapState, lng: latLng[0], lat: latLng[1], cbcCode: searchText });
           }
         }
       } else {
