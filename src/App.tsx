@@ -4,7 +4,7 @@ import Header from './components/Header';
 import React from 'react';
 import { useState } from 'react';
 import { MapState } from './types/Header';
-import { LatLngType } from './types/convertCBC';
+import { LatLngType } from './types/ConvertCBC';
 
 function App() {
   const [latLng, setLatLng] = useState<LatLngType>({

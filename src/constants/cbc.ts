@@ -1,4 +1,4 @@
-import { CBCObject } from '../types/convertCBC';
+import { CBCObject } from '../types/ConvertCBC';
 
 export const w: CBCObject = { 7: '가', 8: '나', 9: '다', 10: '라', 11: '마', 12: '바', 13: '사' };
 export const h: CBCObject = {
