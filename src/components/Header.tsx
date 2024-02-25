@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { h, w } from '../constants/cbc';
 import { HeaderProps } from '../types/Header';
 import { convertToCbc, convertToLatLng } from '../helper/convertCBC';
+import { validateLatLngRange } from '../helper/latlng';
+import { isMobile } from '../helper/agent';
 
 const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMenuState }) => {
   const [searchText, setSearchText] = useState<string>(''); // 검색창에 입력한 값
@@ -24,13 +26,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
     if (s.length === 2) {
       mapState.lat = parseFloat(s[0]);
       mapState.lng = parseFloat(s[1]);
-      // 만약 lat, lng 이 숫자가 아니고, 한국 지도 범위를 벗어났을 때
-      if (
-        isNaN(mapState.lat) ||
-        isNaN(mapState.lng) ||
-        !(mapState.lat > 31 && mapState.lat < 39) ||
-        !(mapState.lng > 124 && mapState.lng < 133)
-      ) {
+      if (!validateLatLngRange(mapState.lat, mapState.lng)) {
         alert("ex. '32.66367, 124.43291'");
       } else {
         let cbc = convertToCbc([mapState.lng, mapState.lat]);
@@ -61,10 +57,8 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
             alert('ex. 가가 1234 1234');
           } else {
             // 그 외의 경우
-            mapState.lng = latLng[0];
-            mapState.lat = latLng[1];
             // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
-            setMapState({ ...mapState, cbcCode: searchText });
+            setMapState({ ...mapState, lng: latLng[0], lat: latLng[1], cbcCode: searchText });
           }
         }
       } else {
@@ -77,11 +71,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
   // mobile의 경우 history 버튼이 없기 때문에 검색 input focus 설정 시 history 영역 호출
   const menuSateChangeMobile = () => {
     // 모바일 환경에서만 input Focus, Blur로 history 영역 제어
-    const state =
-      /Mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent,
-      );
-    if (state) {
+    if (isMobile()) {
       setMenuState(true);
     }
   };

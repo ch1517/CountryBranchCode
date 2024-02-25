@@ -11,9 +11,10 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 import { useState } from 'react';
-import { LatLng } from 'leaflet';
+import { LatLng, LeafletMouseEvent } from 'leaflet';
 import { MapsProps, ZoomLevelCheckProps } from '../types/Maps';
 import { convertToCbc, lineArray } from '../helper/convertCBC';
+import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '../constants/map';
 
 const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState }) => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel); // initial zoom level provided for MapContainer
@@ -26,11 +27,11 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
     zoomend: () => {
       setMapZoomLevel(mapEvents.getZoom());
       setMenuState(false);
-      setLineArr(lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
+      setLineArr(lineArray(mapZoomLevel, map.getBounds()));
     },
     // 지도 움직임 종료
     moveend: () => {
-      setLineArr(lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
+      setLineArr(lineArray(mapZoomLevel, map.getBounds()));
     },
     // 스크롤로 이동할 때 false
     dragstart: () => {
@@ -41,12 +42,12 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
   map.whenReady(() => {
     if (state) {
       // 전체지도에 대한 grid array 그리기
-      lineArr = lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast());
+      lineArr = lineArray(mapZoomLevel, map.getBounds());
       state = false;
     }
   });
 
-  if (lineArr.length !== 0) {
+  if (lineArr.length) {
     return (
       <div>
         {lineArr.map(({ id, latLongArr, cbcText }) => {
@@ -56,8 +57,8 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
               positions={latLongArr}
               color={'white'}
               eventHandlers={{
-                click: (e) => {
-                  convertToCbc([e.latlng['lng'], e.latlng['lat']]);
+                click: (event: LeafletMouseEvent) => {
+                  convertToCbc([event.latlng['lng'], event.latlng['lat']]);
                 },
               }}
             >
@@ -83,9 +84,8 @@ const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
     <div className="contents">
       <MapContainer style={{ height: '100vh' }} center={position} zoom={zoomLevel} scrollWheelZoom={true}>
         <TileLayer
-          maxZoom={22}
-          maxNativeZoom={18}
-          // zoom={zoomLevel}
+          maxZoom={MAX_ZOOM}
+          maxNativeZoom={MAX_NATIVE_ZOOM}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://api.vworld.kr/req/wmts/1.0.0/532CA96F-C19D-3423-A745-FA04E44726C4/midnight/{z}/{y}/{x}.png"
         />
