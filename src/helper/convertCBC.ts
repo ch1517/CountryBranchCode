@@ -95,7 +95,7 @@ const smallPointXY = (m: number, minX: number, maxX: number, minY: number, maxY:
  * @param coordinate
  * @returns {boolean}
  */
-const isInnerinBound = (coordinate: [number, number]) => {
+const isWithinInnerBoundary = (coordinate: [number, number]) => {
   let grs80P = proj4(WGS84, GRS80, coordinate);
   let TKM = 100000;
   let filter: any = {
@@ -193,13 +193,13 @@ const lineArray = (zoomLevel: number, latLngBounds: LatLngBounds) => {
       if (i < pArr.length - 1 && j < pArr[i].length - 1) {
         let c = pArr[i][j];
         // 정해진 bound 안에 있다면, 라벨과 grid 표시하기
-        if (isInnerinBound(c)) {
+        if (isWithinInnerBoundary(c)) {
           let nx = pArr[i + 1][j];
           let ny = pArr[i][j + 1];
           let nxy = pArr[i + 1][j + 1];
           let cbc: [string, number, number] = convertToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2]);
           let cbcText: string = '';
-          if (cbc !== undefined) {
+          if (cbc) {
             cbcText = labelText(divide, cbc);
           }
           reArr.push({
