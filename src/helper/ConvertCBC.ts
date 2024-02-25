@@ -92,11 +92,11 @@ const smallPointXY = (m: number, minX: number, maxX: number, minY: number, maxY:
 };
 /**
  * grid 모양을 한국 지도에 맞게 보여주기 위한 필터링 작업
- * @param codinate
+ * @param coordinate
  * @returns {boolean}
  */
-const isInnerinBound = (codinate: [number, number]) => {
-  let grs80P = proj4(WGS84, GRS80, codinate);
+const isInnerinBound = (coordinate: [number, number]) => {
+  let grs80P = proj4(WGS84, GRS80, coordinate);
   let TKM = 100000;
   let filter: any = {
     7: [13, 21],
