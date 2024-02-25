@@ -11,7 +11,7 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 import { useState } from 'react';
-import { LatLng } from 'leaflet';
+import { LatLng, LeafletMouseEvent } from 'leaflet';
 import { MapsProps, ZoomLevelCheckProps } from '../types/Maps';
 import { convertToCbc, lineArray } from '../helper/convertCBC';
 
@@ -26,11 +26,11 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
     zoomend: () => {
       setMapZoomLevel(mapEvents.getZoom());
       setMenuState(false);
-      setLineArr(lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
+      setLineArr(lineArray(mapZoomLevel, map.getBounds()));
     },
     // 지도 움직임 종료
     moveend: () => {
-      setLineArr(lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast()));
+      setLineArr(lineArray(mapZoomLevel, map.getBounds()));
     },
     // 스크롤로 이동할 때 false
     dragstart: () => {
@@ -41,7 +41,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
   map.whenReady(() => {
     if (state) {
       // 전체지도에 대한 grid array 그리기
-      lineArr = lineArray(mapZoomLevel, map.getBounds().getSouthWest(), map.getBounds().getNorthEast());
+      lineArr = lineArray(mapZoomLevel, map.getBounds());
       state = false;
     }
   });
@@ -56,8 +56,8 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
               positions={latLongArr}
               color={'white'}
               eventHandlers={{
-                click: (e) => {
-                  convertToCbc([e.latlng['lng'], e.latlng['lat']]);
+                click: (event: LeafletMouseEvent) => {
+                  convertToCbc([event.latlng['lng'], event.latlng['lat']]);
                 },
               }}
             >

@@ -1,15 +1,15 @@
 import proj4 from 'proj4';
-import { LatLng } from 'leaflet';
+import { LatLngBounds } from 'leaflet';
 import { grs80, wgs84 } from '../constants/map';
 import { h, w } from '../constants/cbc';
 
 /**
  * 위경도 좌표 -> 국가지점번호
- * @param codinate 위경도 좌표
+ * @param coordinate 위경도 좌표
  * @returns {string,number,number} 국가지점번호 ["가나",1234,1235]
  */
-const convertToCbc = (codinate: [number, number]): [string, number, number] => {
-  let grs80P = proj4(wgs84, grs80, codinate);
+const convertToCbc = (coordinate: [number, number]): [string, number, number] => {
+  let grs80P = proj4(wgs84, grs80, coordinate);
   let wP: number = parseInt(grs80P[0].toString().split('.')[0]);
   let hP: number = parseInt(grs80P[1].toString().split('.')[0]);
   let code: [string, number, number] = [
@@ -156,31 +156,37 @@ const labelText = (d: number, text: [string, number, number]): string => {
 /**
  * grid를 그리는 작업
  * @param {number} zoomLevel zoom level
- * @param {LatLng} _start start lat, lng 좌표
- * @param {LatLng} _end  end lat, lng 좌표
+ * @param {LatLngBounds} latLngBounds lat, lng bound
  * @returns
  */
-const lineArray = (zoomLevel: number, _start: LatLng, _end: LatLng) => {
+const lineArray = (zoomLevel: number, latLngBounds: LatLngBounds) => {
   let reArr = [];
-  let start = proj4(wgs84, grs80, [_start.lng, _start.lat]);
-  let end = proj4(wgs84, grs80, [_end.lng, _end.lat]);
+  const startLatLng = latLngBounds.getSouthWest();
+  const endLatLng = latLngBounds.getNorthEast();
+  const startUTMK = proj4(wgs84, grs80, [startLatLng.lng, startLatLng.lat]);
+  const endUTMK = proj4(wgs84, grs80, [endLatLng.lng, endLatLng.lat]);
 
   // zoomLevel에 따라 grid 배열 생성을 다르게 한다.
   let divide: number = 100000;
-  if (zoomLevel > 19) {
-    divide = 10;
-  } else if (zoomLevel > 16) {
-    divide = 100;
-  } else if (zoomLevel > 13) {
-    divide = 1000;
-  } else if (zoomLevel > 10) {
-    divide = 10000;
-  } else {
-    divide = 100000;
+  switch (true) {
+    case zoomLevel > 19:
+      divide = 10;
+      break;
+    case zoomLevel > 16:
+      divide = 100;
+      break;
+    case zoomLevel > 13:
+      divide = 1000;
+      break;
+    case zoomLevel > 10:
+      divide = 10000;
+      break;
+    default:
+      divide = 100000;
   }
 
   //grid 배열 생성
-  let pArr = smallPointXY(divide, start[0], end[0], start[1], end[1]);
+  let pArr = smallPointXY(divide, startUTMK[0], endUTMK[0], startUTMK[1], endUTMK[1]);
 
   for (let i = 0; i < pArr.length; i++) {
     for (let j = 0; j < pArr[0].length; j++) {
