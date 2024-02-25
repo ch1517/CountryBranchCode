@@ -1,9 +1,10 @@
 import '../assets/css/App.css';
 import React, { useState } from 'react';
-import CbcConvert, { h, w } from '../helper/ConvertCBC';
+import { h, w } from '../constants/cbc';
 import { HeaderProps } from '../types/Header';
+import { convertToCbc, convertToLatLng } from '../helper/convertCBC';
 
-const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMenuState }) => {
+const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMenuState }) => {
   const [searchText, setSearchText] = useState<string>(''); // 검색창에 입력한 값
 
   // 검색 버튼을 눌렀을 때 호출되는 handler
@@ -12,18 +13,30 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
     event.preventDefault();
 
     let s: string[] = searchText.split(',');
-    let _lat: number, _lng: number;
+    const mapState = {
+      lat: 0,
+      lng: 0,
+      cbcCode: '',
+      zoomLevel: null,
+      menuState: false,
+    };
     // lat, lng 으로 주어질 때
     if (s.length === 2) {
-      _lat = parseFloat(s[0]);
-      _lng = parseFloat(s[1]);
-      // 만약 _lat, _lng 이 숫자가 아니고, 한국 지도 범위를 벗어났을 때
-      if (isNaN(_lat) || isNaN(_lng) || !(_lat > 31 && _lat < 39) || !(_lng > 124 && _lng < 133)) {
+      mapState.lat = parseFloat(s[0]);
+      mapState.lng = parseFloat(s[1]);
+      // 만약 lat, lng 이 숫자가 아니고, 한국 지도 범위를 벗어났을 때
+      if (
+        isNaN(mapState.lat) ||
+        isNaN(mapState.lng) ||
+        !(mapState.lat > 31 && mapState.lat < 39) ||
+        !(mapState.lng > 124 && mapState.lng < 133)
+      ) {
         alert("ex. '32.66367, 124.43291'");
       } else {
-        let cbc = CbcConvert.converterToCbc([_lng, _lat]);
+        let cbc = convertToCbc([mapState.lng, mapState.lat]);
+        mapState.cbcCode = `${cbc[0]} ${cbc[1]} ${cbc[2]}`;
         // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
-        setAppState(_lat, _lng, `${cbc[0]} ${cbc[1]} ${cbc[2]}`, null, true);
+        setMapState(mapState);
       }
     } else {
       s = searchText.split(' ');
@@ -42,16 +55,16 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
           alert("ex. '가가 1234 1234'");
           return;
         } else {
-          let latLng: any = CbcConvert.converterToLatLng(searchText);
+          let latLng: any = convertToLatLng(searchText);
           if (latLng === -1) {
-            // converterToLatLng Error
+            // convertToLatLng Error
             alert('ex. 가가 1234 1234');
           } else {
             // 그 외의 경우
-            _lng = latLng[0];
-            _lat = latLng[1];
+            mapState.lng = latLng[0];
+            mapState.lat = latLng[1];
             // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
-            setAppState(_lat, _lng, searchText, null, true);
+            setMapState({ ...mapState, cbcCode: searchText });
           }
         }
       } else {
@@ -72,7 +85,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
       setMenuState(true);
     }
   };
-  const makeHistory = (historyArr: any[], setAppState: any) => {
+  const makeHistory = (historyArr: any[], setMapState: any) => {
     return (
       <div>
         {historyArr.map(({ lng, lat, cbcCode }, index) => {
@@ -81,7 +94,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
               key={index}
               className="historyList"
               onClick={() => {
-                setAppState(lat, lng, cbcCode, null, true);
+                setMapState(lat, lng, cbcCode, null, true);
                 setSearchText(cbcCode);
               }}
             >
@@ -118,7 +131,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setAppState, setMe
             onChange={(event) => setSearchText(event.target.value)}
           />
           <input type="submit" value="검색"></input>
-          <div className={menuState ? 'historyOpen' : 'historyClose'}>{makeHistory(historyList, setAppState)}</div>
+          <div className={menuState ? 'historyOpen' : 'historyClose'}>{makeHistory(historyList, setMapState)}</div>
         </form>
         {/* history 메뉴 toggle (Window의 경우) */}
         <button className="toggleBtn" onClick={() => setMenuState(!menuState)}>
