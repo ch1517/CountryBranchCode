@@ -4,6 +4,7 @@ import { h, w } from '../constants/cbc';
 import { HeaderProps } from '../types/Header';
 import { convertToCbc, convertToLatLng } from '../helper/convertCBC';
 import { validateLatLngRange } from '../helper/latlng';
+import { isMobile } from '../helper/agent';
 
 const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMenuState }) => {
   const [searchText, setSearchText] = useState<string>(''); // 검색창에 입력한 값
@@ -72,11 +73,7 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
   // mobile의 경우 history 버튼이 없기 때문에 검색 input focus 설정 시 history 영역 호출
   const menuSateChangeMobile = () => {
     // 모바일 환경에서만 input Focus, Blur로 history 영역 제어
-    const state =
-      /Mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(
-        navigator.userAgent,
-      );
-    if (state) {
+    if (isMobile()) {
       setMenuState(true);
     }
   };
