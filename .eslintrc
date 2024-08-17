@@ -107,7 +107,8 @@
           "props": true
         }
       }
-    ]
+    ],
+    "semi": [2, "never"],
   },
   "settings": {
     "import/resolver": {
