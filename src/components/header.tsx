@@ -8,6 +8,7 @@ import { validateLatLngRange } from '../helper/latlng'
 import { isMobile } from '../helper/agent'
 import { HeaderProperties, History, MapState } from '../types/header'
 import titleLogo from '../assets/images/title-logo.png'
+import markerImg from '../assets/images/marker.png'
 
 const App: React.FC<HeaderProperties> = ({
   menuState, historyList, setMapState, setMenuState
@@ -100,7 +101,7 @@ const App: React.FC<HeaderProperties> = ({
           className="historyList"
           onClick={() => onClickHistory({ cbcCode, lat, lng })}
         >
-          <img src="/CountryBranchCode/images/marker.png" alt="" />
+          <img src={markerImg} alt="" />
           <div className="codeDiv">
             <div className="cbcCode">{cbcCode}</div>
             <div className="latlng">
