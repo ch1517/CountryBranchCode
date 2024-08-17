@@ -1,16 +1,15 @@
-/* eslint-disable no-unused-vars */
-export type LatLngType = {
+export interface LatLngType {
   lat: number;
   lng: number;
-};
+}
 
-export type ZoomLevelCheckProps = {
+export interface ZoomLevelCheckProperties {
   zoomLevel: number;
   setMenuState: (menuState: boolean) => void;
-};
+}
 
-export type MapsProps = {
+export interface MapsProperties {
   latLng: LatLngType;
   zoomLevel: number;
   setMenuState: (menuState: boolean) => void;
-};
+}
