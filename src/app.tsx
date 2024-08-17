@@ -43,7 +43,7 @@ const App = (): JSX.Element => {
     })
     setZoomLevel(newZoomLevel)
     setMenuState(menuState)
-    setHistoryList(historyList)
+    setHistoryList(newHistoryList)
   }
 
   return (
