@@ -1,11 +1,22 @@
+@font-face {
+  font-family: SurroundFontBold;
+  src: url('../fonts/Cafe24Ssurround-v2.0.otf') format('opentype');
+}
+@font-face {
+  font-family: SurroundFont;
+  src: url('../fonts/Cafe24SsurroundAir-v1.1.otf') format('opentype');
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'SurroundFont';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+}
+/* input 기본 스타일 초기화 */
+input {
+  all: unset;
 }
 
 .header {
@@ -18,13 +29,13 @@ body {
   color: white;
   display: flex;
   background-color: #1e304f;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   align-items: center;
   justify-content: space-between;
 }
 
-.header .leftMenu {
+.header .left-menu {
   display: flex;
   height: 100%;
   align-items: center;
@@ -32,19 +43,20 @@ body {
 
 .header .title {
   margin-left: 30px;
+  font-family: 'SurroundFontBold';
+  display: flex;
+  align-items: center;
 }
 
-
-.header .developer {
-  color: black;
-  font-size: 15px;
-  margin-left: 20px;
-  align-self: flex-end;
-  margin-bottom: 15px;
+.header .title .logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 15px;
 }
 
-.header .search-div {
-  flex: 1;
+.header .search-container {
+  width: 70%;
+  max-width: 800px;
   height: 100%;
   display: flex;
   justify-content: flex-end;
@@ -52,34 +64,36 @@ body {
 }
 
 .header .search {
-  width: 60%;
-  height: 100%;
+  width: 100%;
+  height: 35px;
+  background-color: white;
+  border: 4px #7f9496 solid;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
-.header .search input[type=text] {
-  width: 95%;
-  height: 45%;
-  border-radius: 10px;
-  border-style: none;
-  color: black;
+.header .search input[type='text'] {
+  padding: 0 10px;
+  width: 100%;
+  text-align: left;
   font-size: 20px;
+  color: black;
 }
 
-.header .search input[type=submit] {
-  width: 70px;
-  height: 50%;
-  margin-left: 10px;
+.header .search .search-button {
+  width: 30px;
+  margin-right: 5px;
   padding: 0.5rem;
   font-size: 1rem;
-  background-color: black;
-  color: white;
-  border-radius: 10px;
+  color: black;
   border-style: none;
-  font-weight: bold;
   cursor: pointer;
+  position: absolute;
+  right: 0;
+  background-color: transparent;
 }
 
 .header .developer a:link,
@@ -90,8 +104,7 @@ a:hover {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .leaflet-container {
@@ -130,7 +143,6 @@ code {
   height: 100%;
   top: 89px;
   right: 0;
-  ;
   display: none;
   z-index: 999;
   background-color: #1e304f;
@@ -165,7 +177,6 @@ code {
 
 .historyList .latlng {
   font-size: 12px;
-
 }
 
 .historyList .cbcCode {
@@ -197,7 +208,7 @@ code {
   display: none;
 }
 
-@media all and (max-width:1200px) {
+@media all and (max-width: 1200px) {
   .header .historyOpen {
     width: 25%;
   }
@@ -211,7 +222,7 @@ code {
   }
 }
 
-@media all and (max-width:800px) {
+@media all and (max-width: 800px) {
   .header {
     height: 70px;
   }
@@ -235,11 +246,11 @@ code {
     margin-left: 5px;
   }
 
-  .header .search input[type=text] {
+  .header .search input[type='text'] {
     font-size: 13px;
   }
 
-  .header .search input[type=submit] {
+  .header .search input[type='submit'] {
     font-size: 10px;
     width: 50px;
     margin-right: 10px;
