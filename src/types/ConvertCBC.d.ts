@@ -1,7 +1,7 @@
-export type CBCObject = {
+export interface CBCObject {
   [key: number]: string;
-};
-export type LatLngType = {
+}
+export interface LatLngType {
   lat: number;
   lng: number;
-};
+}

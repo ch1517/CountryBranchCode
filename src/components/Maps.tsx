@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MapContainer,
   MapConsumer,
@@ -8,17 +8,16 @@ import {
   Popup,
   Tooltip,
   useMap,
-  useMapEvents,
+  useMapEvents
 } from 'react-leaflet';
-import { useState } from 'react';
 import { LatLng, LeafletMouseEvent } from 'leaflet';
-import { MapsProps, ZoomLevelCheckProps } from '../types/Maps';
+import { MapsProps as MapsProperties, ZoomLevelCheckProps as ZoomLevelCheckProperties } from '../types/Maps';
 import { convertToCbc, lineArray } from '../helper/convertCBC';
 import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '../constants/map';
 
-const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState }) => {
+const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setMenuState }) => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel); // initial zoom level provided for MapContainer
-  let [lineArr, setLineArr] = useState<any[]>([]);
+  let [lineArray_, setLineArray] = useState<any[]>([]);
   const map = useMap();
   let state = true; // 초기화 시 한번만 실행하기 위한 state 변수
 
@@ -27,54 +26,51 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProps> = ({ zoomLevel, setMenuState
     zoomend: () => {
       setMapZoomLevel(mapEvents.getZoom());
       setMenuState(false);
-      setLineArr(lineArray(mapZoomLevel, map.getBounds()));
+      setLineArray(lineArray(mapZoomLevel, map.getBounds()));
     },
     // 지도 움직임 종료
     moveend: () => {
-      setLineArr(lineArray(mapZoomLevel, map.getBounds()));
+      setLineArray(lineArray(mapZoomLevel, map.getBounds()));
     },
     // 스크롤로 이동할 때 false
     dragstart: () => {
       setMenuState(false);
-    },
+    }
   });
 
   map.whenReady(() => {
     if (state) {
       // 전체지도에 대한 grid array 그리기
-      lineArr = lineArray(mapZoomLevel, map.getBounds());
+      lineArray_ = lineArray(mapZoomLevel, map.getBounds());
       state = false;
     }
   });
 
-  if (lineArr.length) {
+  if (lineArray_.length > 0) {
     return (
       <div>
-        {lineArr.map(({ id, latLongArr, cbcText }) => {
-          return (
-            <Polygon
-              key={id}
-              positions={latLongArr}
-              color={'white'}
-              eventHandlers={{
-                click: (event: LeafletMouseEvent) => {
-                  convertToCbc([event.latlng['lng'], event.latlng['lat']]);
-                },
-              }}
-            >
-              <Tooltip direction="bottom" opacity={1} permanent>
-                <span>{cbcText}</span>
-              </Tooltip>
-            </Polygon>
-          );
-        })}
+        {lineArray_.map(({ id, latLongArr, cbcText }) => (
+          <Polygon
+            key={id}
+            positions={latLongArr}
+            color="white"
+            eventHandlers={{
+              click: (event: LeafletMouseEvent) => {
+                convertToCbc([event.latlng.lng, event.latlng.lat]);
+              }
+            }}
+          >
+            <Tooltip direction="bottom" opacity={1} permanent>
+              <span>{cbcText}</span>
+            </Tooltip>
+          </Polygon>
+        ))}
       </div>
     );
-  } else {
-    return null;
   }
+  return null;
 };
-const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
+const Maps: React.FC<MapsProperties> = ({ latLng, zoomLevel, setMenuState }) => {
   const [position, setPosition] = useState<any>([latLng.lat, latLng.lng]);
   const cbc = convertToCbc([latLng.lng, latLng.lat]);
   useEffect(() => {
@@ -82,7 +78,7 @@ const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
   }, [latLng]);
   return (
     <div className="contents">
-      <MapContainer style={{ height: '100vh' }} center={position} zoom={zoomLevel} scrollWheelZoom={true}>
+      <MapContainer style={{ height: '100vh' }} center={position} zoom={zoomLevel} scrollWheelZoom>
         <TileLayer
           maxZoom={MAX_ZOOM}
           maxNativeZoom={MAX_NATIVE_ZOOM}
@@ -102,7 +98,9 @@ const Maps: React.FC<MapsProps> = ({ latLng, zoomLevel, setMenuState }) => {
             <span className="popupSpan">
               <b>{`${cbc[0]} ${cbc[1]} ${cbc[2]}`}</b>
               <br />
-              {latLng.lat}, {latLng.lng}
+              {latLng.lat}
+              ,
+              {latLng.lng}
             </span>
           </Popup>
         </Marker>
