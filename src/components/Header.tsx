@@ -5,6 +5,7 @@ import { HeaderProps } from '../types/Header';
 import { convertToCbc, convertToLatLng } from '../helper/convertCBC';
 import { validateLatLngRange } from '../helper/latlng';
 import { isMobile } from '../helper/agent';
+import titleLogo from '../assets/images/title-logo.png';
 
 const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMenuState }) => {
   const [searchText, setSearchText] = useState<string>(''); // 검색창에 입력한 값
@@ -103,13 +104,13 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
   };
   return (
     <div className="header">
-      <div className="leftMenu">
-        <div className="title">국가지점번호</div>
-        <div className="developer">
-          <a href="https://doqtqu.tistory.com/186">©doqtqu</a>
+      <div className="left-menu">
+        <div className="title">
+          <img className="logo" src={titleLogo} alt="" />
+          <b>국가지점번호</b>
         </div>
       </div>
-      <div className="search-div">
+      <div className="search-container">
         <form className="search" onSubmit={pushToApp}>
           <input
             onFocus={menuSateChangeMobile}
@@ -120,9 +121,11 @@ const App: React.FC<HeaderProps> = ({ menuState, historyList, setMapState, setMe
             // 검색창에 입력하는 값이 달라질 때마다 호출되는 handler
             onChange={(event) => setSearchText(event.target.value)}
           />
-          <input type="submit" value="검색"></input>
-          <div className={menuState ? 'historyOpen' : 'historyClose'}>{makeHistory(historyList, setMapState)}</div>
+          <button className="search-button" type="submit">
+            <i className="fas fa-search"></i>
+          </button>
         </form>
+        <div className={menuState ? 'historyOpen' : 'historyClose'}>{makeHistory(historyList, setMapState)}</div>
         {/* history 메뉴 toggle (Window의 경우) */}
         <button className="toggleBtn" onClick={() => setMenuState(!menuState)}>
           <i className="fas fa-history lg"></i>

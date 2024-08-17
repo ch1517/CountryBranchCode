@@ -3,6 +3,7 @@
   background-color: black;
   display: flex;
   flex-direction: column;
+  font-family: 'SurroundFont', sans-serif;
 }
 
 .App-logo {
