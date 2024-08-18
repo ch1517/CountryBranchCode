@@ -2,8 +2,8 @@
 /* eslint-disable no-restricted-syntax */
 import proj4 from 'proj4'
 import { LatLngBounds } from 'leaflet'
-import { GRS80, WGS84 } from '../constants/map'
-import { h, w } from '../constants/cbc'
+import { GRS80, WGS84 } from '~/constants/map'
+import { h, w } from '~/constants/cbc'
 
 /**
  * 위경도 좌표 -> 국가지점번호

@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys */
-import { CBCObject } from '../types/convert-cbc'
+import { CBCObject } from '~/types/convert-cbc'
 
 export const w: CBCObject = {
   7: '가', 8: '나', 9: '다', 10: '라', 11: '마', 12: '바', 13: '사'

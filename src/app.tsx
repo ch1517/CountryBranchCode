@@ -1,9 +1,9 @@
-import './assets/css/App.css'
+import '~/assets/css/App.css'
 import React, { useState } from 'react'
-import Maps from './components/maps'
-import Header from './components/header'
-import { History, MapState } from './types/header'
-import { LatLngType } from './types/convert-cbc'
+import Maps from '~/components/maps'
+import Header from '~/components/header'
+import { History, MapState } from '~/types/header'
+import { LatLngType } from '~/types/convert-cbc'
 
 const App = (): JSX.Element => {
   const [latLng, setLatLng] = useState<LatLngType>({

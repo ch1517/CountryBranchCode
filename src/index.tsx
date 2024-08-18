@@ -1,8 +1,8 @@
 import React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import './assets/css/index.css'
-import App from './app'
-import reportWebVitals from './report-web-vitals'
+import '~/assets/css/index.css'
+import App from '~/app'
+import reportWebVitals from '~/report-web-vitals'
 
 const rootElement = document.querySelector('#root')
 if (!rootElement) {

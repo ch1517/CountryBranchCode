@@ -11,9 +11,9 @@ import {
   useMapEvents
 } from 'react-leaflet'
 import { LatLng, LeafletMouseEvent } from 'leaflet'
-import { MapsProperties, ZoomLevelCheckProperties } from '../types/maps'
-import { convertToCbc, getLineArray } from '../helper/convert-cbc'
-import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '../constants/map'
+import { MapsProperties, ZoomLevelCheckProperties } from '~/types/maps'
+import { convertToCbc, getLineArray } from '~/helper/convert-cbc'
+import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '~/constants/map'
 
 const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setMenuState }): JSX.Element => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel) // initial zoom level provided for MapContainer
