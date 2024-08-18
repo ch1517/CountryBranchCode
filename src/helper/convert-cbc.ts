@@ -2,9 +2,25 @@
 /* eslint-disable no-restricted-syntax */
 import proj4 from 'proj4'
 import { LatLngBounds } from 'leaflet'
-import { GRS80, WGS84 } from '../constants/map'
-import { h, w } from '../constants/cbc'
+import { GRS80, WGS84 } from '~/constants/map'
+import { h, w } from '~/constants/cbc'
+import { LineInfo } from '~/types/maps'
 
+export const isValidCbcCode = (textSplitArray: any[]): boolean => {
+  // textSplitArray가 number[]인 경우는 위도, 경도로 주어진 경우이므로 false를 반환
+  if ((textSplitArray as any[]).every((code) => typeof code === 'number')) {
+    return false
+  }
+  return textSplitArray.length === 3
+    && typeof textSplitArray[0] === 'string'
+    && textSplitArray[0].length === 2
+    && Object.values(w).includes(textSplitArray[0][0])
+    && Object.values(h).includes(textSplitArray[0][1])
+    && textSplitArray.slice(1).every(
+      (code: string) => code.length === 4
+        && !Number.isNaN(Number.parseInt(code, 10))
+    )
+}
 /**
  * 위경도 좌표 -> 국가지점번호
  * @param coordinate 위경도 좌표
@@ -171,8 +187,8 @@ const labelText = (d: number, text: [string, number, number]): string => {
  * @param {LatLngBounds} latLngBounds lat, lng bound
  * @returns
  */
-const getLineArray = (zoomLevel: number, latLngBounds: LatLngBounds): any[] => {
-  const reArray = []
+const getLineInfoArray = (zoomLevel: number, latLngBounds: LatLngBounds): LineInfo[] => {
+  const lineInfoArray: LineInfo[] = []
   const startLatLng = latLngBounds.getSouthWest()
   const endLatLng = latLngBounds.getNorthEast()
   const startUTMK = proj4(WGS84, GRS80, [startLatLng.lng, startLatLng.lat])
@@ -213,7 +229,7 @@ const getLineArray = (zoomLevel: number, latLngBounds: LatLngBounds): any[] => {
         const cbc: [string, number, number] = convertToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2])
         const cbcText = cbc ? labelText(divide, cbc) : ''
 
-        reArray.push({
+        lineInfoArray.push({
           latLongArr: [
             [c[1], c[0]],
             [nx[1], nx[0]],
@@ -227,7 +243,7 @@ const getLineArray = (zoomLevel: number, latLngBounds: LatLngBounds): any[] => {
     }
   }
 
-  return reArray
+  return lineInfoArray
 }
 
-export { convertToCbc, getLineArray, convertToLatLng }
+export { convertToCbc, getLineInfoArray, convertToLatLng }

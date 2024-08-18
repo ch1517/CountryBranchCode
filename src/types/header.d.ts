@@ -3,7 +3,6 @@ export interface MapState {
   lng: number;
   cbcCode: string;
   zoomLevel?: number;
-  menuState: boolean;
 }
 export interface History {
   cbcCode: string;
@@ -11,8 +10,5 @@ export interface History {
   lng: number;
 }
 export interface HeaderProperties {
-  menuState: boolean;
-  historyList: History[];
   setMapState: (mapState: MapState) => void;
-  setMenuState: (menuState: boolean) => void;
 }

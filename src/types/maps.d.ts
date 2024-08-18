@@ -5,11 +5,16 @@ export interface LatLngType {
 
 export interface ZoomLevelCheckProperties {
   zoomLevel: number;
-  setMenuState: (menuState: boolean) => void;
+  setIsMenuOpen: (isMenuOpen: boolean) => void;
 }
 
 export interface MapsProperties {
   latLng: LatLngType;
   zoomLevel: number;
-  setMenuState: (menuState: boolean) => void;
+}
+
+export interface LineInfo {
+  latLongArr: [number, number][]
+  id: string
+  cbcText: string
 }
