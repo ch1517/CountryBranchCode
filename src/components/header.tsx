@@ -24,16 +24,12 @@ const Header = ({
   const onSubmitHandler = (event: FormEvent<Element>): void => {
     event.preventDefault()
 
-    let s: string[] = searchText.split(',')
-    const mapState: MapState = {
-      cbcCode: '',
-      lat: 0,
-      lng: 0
-    }
+    let textSplitArray: string[] = searchText.split(',')
+    const mapState: MapState = { cbcCode: '', lat: 0, lng: 0 }
     // lat, lng 으로 주어질 때
-    if (s.length === 2) {
-      mapState.lat = Number.parseFloat(s[0])
-      mapState.lng = Number.parseFloat(s[1])
+    if (textSplitArray.length === 2) {
+      mapState.lat = Number.parseFloat(textSplitArray[0])
+      mapState.lng = Number.parseFloat(textSplitArray[1])
       if (validateLatLngRange(mapState.lat, mapState.lng)) {
         const cbc = convertToCbc([mapState.lng, mapState.lat])
         mapState.cbcCode = `${cbc[0]} ${cbc[1]} ${cbc[2]}`
@@ -48,17 +44,17 @@ const Header = ({
         alert("ex. '32.66367, 124.43291'")
       }
     } else {
-      s = searchText.split(' ')
+      textSplitArray = searchText.split(' ')
       // 국가지점번호로 주어질 때
-      if (s.length === 3) {
+      if (textSplitArray.length === 3) {
         // s[0](ex.가나)가 문자이며 두 글자이고, 범위 안에 해당될 때
-        const check1 = typeof s[0] === 'string'
-          && s[0].length === 2
-          && Object.values(w).includes(s[0][0])
-          && Object.values(h).includes(s[0][1])
+        const check1 = typeof textSplitArray[0] === 'string'
+          && textSplitArray[0].length === 2
+          && Object.values(w).includes(textSplitArray[0][0])
+          && Object.values(h).includes(textSplitArray[0][1])
         // s[1],s[2]는 숫자이면서 네 자리
-        const check2 = !Number.isNaN(Number(s[1])) && s[1].length === 4
-        const check3 = !Number.isNaN(Number(s[2])) && s[2].length === 4
+        const check2 = !Number.isNaN(Number(textSplitArray[1])) && textSplitArray[1].length === 4
+        const check3 = !Number.isNaN(Number(textSplitArray[2])) && textSplitArray[2].length === 4
         if (!check1 || !check2 || !check3) {
           alert("ex. '가가 1234 1234'")
         } else {
