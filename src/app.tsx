@@ -4,7 +4,7 @@ import Maps from '~/components/maps'
 import Header from '~/components/header'
 import { useMapInfo } from '~/hooks/map'
 import { useSearch } from '~/hooks/search'
-import { MenuProvider, useMenuContext } from '~/contexts/menu-context'
+import { MenuProvider } from '~/contexts/menu-context'
 
 const App = (): JSX.Element => {
   const {
