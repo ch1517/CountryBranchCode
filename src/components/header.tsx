@@ -13,9 +13,11 @@ import { useSearch } from '~/hooks/search'
 import { useMenuContext } from '~/contexts/menu-context'
 
 const Header = ({
-  historyList, setMapState
+  setMapState
 }: HeaderProperties) : JSX.Element => {
-  const { searchText, setSearchText } = useSearch('')
+  const {
+    searchText, setSearchText, historyList, updateHistoryList
+  } = useSearch('')
   const { isMenuOpen, toggleMenu, setIsMenuOpen } = useMenuContext()
 
   // 검색 버튼을 눌렀을 때 호출되는 handler
@@ -37,6 +39,11 @@ const Header = ({
         mapState.cbcCode = `${cbc[0]} ${cbc[1]} ${cbc[2]}`
         // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
         setMapState(mapState)
+        updateHistoryList(
+          historyList,
+          { lat: mapState.lat, lng: mapState.lng },
+          mapState.cbcCode
+        )
       } else {
         alert("ex. '32.66367, 124.43291'")
       }
@@ -55,8 +62,8 @@ const Header = ({
         if (!check1 || !check2 || !check3) {
           alert("ex. '가가 1234 1234'")
         } else {
-          const latLng: any = convertToLatLng(searchText)
-          if (latLng === -1) {
+          const latLng: number | [number, number] = convertToLatLng(searchText)
+          if (typeof latLng === 'number') {
             // convertToLatLng Error
             alert('ex. 가가 1234 1234')
           } else {
@@ -68,6 +75,11 @@ const Header = ({
               lat: latLng[1],
               lng: latLng[0]
             })
+            updateHistoryList(
+              historyList,
+              { lat: latLng[1], lng: latLng[0] },
+              searchText
+            )
           }
         }
       } else {

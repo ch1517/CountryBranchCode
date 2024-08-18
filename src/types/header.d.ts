@@ -10,6 +10,5 @@ export interface History {
   lng: number;
 }
 export interface HeaderProperties {
-  historyList: History[];
   setMapState: (mapState: MapState) => void;
 }
