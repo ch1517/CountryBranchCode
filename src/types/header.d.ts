@@ -3,7 +3,6 @@ export interface MapState {
   lng: number;
   cbcCode: string;
   zoomLevel?: number;
-  menuState: boolean;
 }
 export interface History {
   cbcCode: string;

@@ -16,19 +16,17 @@ const Header = ({
   historyList, setMapState
 }: HeaderProperties) : JSX.Element => {
   const { searchText, setSearchText } = useSearch('')
-  const { isMenuOpen, toggleMenu } = useMenuContext()
+  const { isMenuOpen, toggleMenu, setIsMenuOpen } = useMenuContext()
 
   // 검색 버튼을 눌렀을 때 호출되는 handler
-  const pushToApp = (event: FormEvent<Element>): void => {
-    // 기존의 form event를 막는다.
+  const onSubmitHandler = (event: FormEvent<Element>): void => {
     event.preventDefault()
 
     let s: string[] = searchText.split(',')
     const mapState: MapState = {
       cbcCode: '',
       lat: 0,
-      lng: 0,
-      menuState: false
+      lng: 0
     }
     // lat, lng 으로 주어질 때
     if (s.length === 2) {
@@ -87,12 +85,8 @@ const Header = ({
     }
   }
   const onClickHistory = ({ lng, lat, cbcCode }: History): void => {
-    setMapState({
-      cbcCode,
-      lat,
-      lng,
-      menuState: true
-    })
+    setMapState({ cbcCode, lat, lng })
+    setIsMenuOpen(true)
     setSearchText(cbcCode)
   }
   const makeHistory = (historyArray: History[]): JSX.Element => (
@@ -126,7 +120,7 @@ const Header = ({
         </div>
       </div>
       <div className="search-container">
-        <form className="search" onSubmit={pushToApp}>
+        <form className="search" onSubmit={onSubmitHandler}>
           <input
             onFocus={menuSateChangeMobile}
             onBlur={menuSateChangeMobile}
