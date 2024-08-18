@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useEffect, useState, useCallback } from 'react'
 import {
   MapContainer,
-  MapConsumer,
   TileLayer,
   Polygon,
   Marker,
   Popup,
   Tooltip,
-  useMap,
+  MapConsumer,
   useMapEvents
 } from 'react-leaflet'
 import { LatLng, LeafletMouseEvent } from 'leaflet'
@@ -16,32 +18,33 @@ import { convertToCbc, getLineArray } from '~/helper/convert-cbc'
 import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '~/constants/map'
 import { useMenuContext } from '~/contexts/menu-context'
 
-const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setIsMenuOpen }): JSX.Element => {
-  const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel) // initial zoom level provided for MapContainer
+// ZoomLevelCheck 컴포넌트
+const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties): JSX.Element => {
+  const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel)
   const [lineArray, setLineArray] = useState<any[]>([])
-  const map = useMap()
-
-  const mapEvents = useMapEvents({
-    // 스크롤로 이동할 때 false
-    dragstart: () => {
-      setIsMenuOpen(false)
-    },
-    // 지도 움직임 종료
-    moveend: () => {
-      setLineArray(getLineArray(mapZoomLevel, map.getBounds()))
-    },
-    // 지도 zoom 종료
+  const map = useMapEvents({
+    dragstart: () => setIsMenuOpen(false),
+    moveend: () => updateLineArray(),
     zoomend: () => {
-      setMapZoomLevel(mapEvents.getZoom())
+      setMapZoomLevel(map.getZoom())
       setIsMenuOpen(false)
-      setLineArray(getLineArray(mapZoomLevel, map.getBounds()))
+      updateLineArray()
     }
   })
 
-  useEffect(() => {
-    // 전체지도에 대한 grid array 그리기
-    setLineArray(getLineArray(mapZoomLevel, map.getBounds()))
+  const updateLineArray = useCallback(() => {
+    if (map) {
+      setLineArray(getLineArray(mapZoomLevel, map.getBounds()))
+    }
   }, [mapZoomLevel, map])
+
+  useEffect(() => {
+    updateLineArray()
+  }, [mapZoomLevel, updateLineArray])
+
+  const handlePolygonClick = useCallback((event: LeafletMouseEvent) => {
+    convertToCbc([event.latlng.lng, event.latlng.lat])
+  }, [])
 
   return (
     <div>
@@ -50,11 +53,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setIsMe
           key={id}
           positions={latLongArr}
           color="white"
-          eventHandlers={{
-            click: (event: LeafletMouseEvent) => {
-              convertToCbc([event.latlng.lng, event.latlng.lat])
-            }
-          }}
+          eventHandlers={{ click: handlePolygonClick }}
         >
           <Tooltip direction="bottom" opacity={1} permanent>
             <span>{cbcText}</span>
@@ -64,28 +63,38 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setIsMe
     </div>
   )
 }
-const Maps = ({ latLng, zoomLevel }: MapsProperties) : JSX.Element => {
-  const [position, setPosition] = useState<any>([latLng.lat, latLng.lng])
-  const { setIsMenuOpen } = useMenuContext()
 
+// Maps 컴포넌트
+const Maps = ({ latLng, zoomLevel }: MapsProperties): JSX.Element => {
+  const [position, setPosition] = useState<[number, number]>([latLng.lat, latLng.lng])
+  const [currentZoomLevel] = useState<number>(zoomLevel)
+  const { setIsMenuOpen } = useMenuContext()
   const cbc = convertToCbc([latLng.lng, latLng.lat])
+
   useEffect(() => {
     setPosition([latLng.lat, latLng.lng])
   }, [latLng])
+
   return (
     <div className="contents">
-      <MapContainer style={{ height: '100vh' }} center={position} zoom={zoomLevel} scrollWheelZoom>
+      <MapContainer
+        style={{ height: '100vh' }}
+        center={position}
+        zoom={currentZoomLevel}
+        scrollWheelZoom
+      >
         <TileLayer
           maxZoom={MAX_ZOOM}
           maxNativeZoom={MAX_NATIVE_ZOOM}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://api.vworld.kr/req/wmts/1.0.0/532CA96F-C19D-3423-A745-FA04E44726C4/midnight/{z}/{y}/{x}.png"
         />
-        <ZoomLevelCheck zoomLevel={zoomLevel} setIsMenuOpen={setIsMenuOpen} />
+        <ZoomLevelCheck zoomLevel={currentZoomLevel} setIsMenuOpen={setIsMenuOpen} />
         <MapConsumer>
           {(map) => {
-            // 헤더로부터 입력받은 값을 업데이트
-            map.setView(new LatLng(latLng.lat, latLng.lng), zoomLevel)
+            useEffect(() => {
+              map.setView(new LatLng(latLng.lat, latLng.lng), zoomLevel)
+            }, [map, latLng, zoomLevel])
             // eslint-disable-next-line unicorn/no-null
             return null
           }}
@@ -105,4 +114,5 @@ const Maps = ({ latLng, zoomLevel }: MapsProperties) : JSX.Element => {
     </div>
   )
 }
+
 export default React.memo(Maps)
