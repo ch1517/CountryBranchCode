@@ -13,15 +13,15 @@ import {
   useMapEvents
 } from 'react-leaflet'
 import { LatLng, LeafletMouseEvent } from 'leaflet'
-import { MapsProperties, ZoomLevelCheckProperties } from '~/types/maps'
-import { convertToCbc, getLineArray } from '~/helper/convert-cbc'
+import { LineInfo, MapsProperties, ZoomLevelCheckProperties } from '~/types/maps'
+import { convertToCbc, getLineInfoArray } from '~/helper/convert-cbc'
 import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '~/constants/map'
 import { useMenuContext } from '~/contexts/menu-context'
 
 // ZoomLevelCheck 컴포넌트
 const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties): JSX.Element => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel)
-  const [lineArray, setLineArray] = useState<any[]>([])
+  const [lineInfoArray, setLineInfoArray] = useState<LineInfo[]>([])
   const map = useMapEvents({
     dragstart: () => setIsMenuOpen(false),
     moveend: () => updateLineArray(),
@@ -34,7 +34,7 @@ const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties):
 
   const updateLineArray = useCallback(() => {
     if (map) {
-      setLineArray(getLineArray(mapZoomLevel, map.getBounds()))
+      setLineInfoArray(getLineInfoArray(mapZoomLevel, map.getBounds()))
     }
   }, [mapZoomLevel, map])
 
@@ -48,7 +48,7 @@ const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties):
 
   return (
     <div>
-      {lineArray.map(({ id, latLongArr, cbcText }) => (
+      {lineInfoArray.map(({ id, latLongArr, cbcText }) => (
         <Polygon
           key={id}
           positions={latLongArr}

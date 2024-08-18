@@ -12,3 +12,9 @@ export interface MapsProperties {
   latLng: LatLngType;
   zoomLevel: number;
 }
+
+export interface LineInfo {
+  latLongArr: [number, number][]
+  id: string
+  cbcText: string
+}
