@@ -1,10 +1,10 @@
 import '~/assets/css/App.css'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Maps from '~/components/maps'
 import Header from '~/components/header'
-import { useMapInfo } from './hooks/map'
-import { useSearch } from './hooks/search'
-import { useMenu } from './hooks/menu'
+import { useMapInfo } from '~/hooks/map'
+import { useSearch } from '~/hooks/search'
+import { MenuProvider, useMenuContext } from '~/contexts/menu-context'
 
 const App = (): JSX.Element => {
   const {
@@ -13,7 +13,6 @@ const App = (): JSX.Element => {
     setMapInfo,
     zoomLevel
   } = useMapInfo()
-  const { isMenuOpen, toggleMenu, setIsMenuOpen } = useMenu(false)
   const { historyList, updateHistoryList } = useSearch('')
   const isFirstRender = useRef(true)
 
@@ -27,13 +26,13 @@ const App = (): JSX.Element => {
 
   return (
     <div className="App">
-      <Header
-        isMenuOpen={isMenuOpen}
-        historyList={historyList}
-        setMapState={setMapInfo}
-        toggleMenu={toggleMenu}
-      />
-      <Maps latLng={latLng} zoomLevel={zoomLevel} setIsMenuOpen={setIsMenuOpen} />
+      <MenuProvider>
+        <Header
+          historyList={historyList}
+          setMapState={setMapInfo}
+        />
+        <Maps latLng={latLng} zoomLevel={zoomLevel} />
+      </MenuProvider>
     </div>
   )
 }

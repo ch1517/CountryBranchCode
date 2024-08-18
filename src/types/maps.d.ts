@@ -11,5 +11,4 @@ export interface ZoomLevelCheckProperties {
 export interface MapsProperties {
   latLng: LatLngType;
   zoomLevel: number;
-  setIsMenuOpen: (isMenuOpen: boolean) => void;
 }

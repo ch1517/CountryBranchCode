@@ -10,11 +10,13 @@ import { HeaderProperties, History, MapState } from '~/types/header'
 import titleLogo from '~/assets/images/title-logo.png'
 import markerImg from '~/assets/images/marker.png'
 import { useSearch } from '~/hooks/search'
+import { useMenuContext } from '~/contexts/menu-context'
 
 const Header = ({
-  isMenuOpen, historyList, setMapState, toggleMenu
+  historyList, setMapState
 }: HeaderProperties) : JSX.Element => {
   const { searchText, setSearchText } = useSearch('')
+  const { isMenuOpen, toggleMenu } = useMenuContext()
 
   // 검색 버튼을 눌렀을 때 호출되는 handler
   const pushToApp = (event: FormEvent<Element>): void => {
