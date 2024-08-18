@@ -2,11 +2,10 @@
 /* eslint-disable no-alert */
 import '~/assets/css/App.css'
 import React, { FormEvent } from 'react'
-import { h, w } from '~/constants/cbc'
-import { convertToCbc, convertToLatLng } from '~/helper/convert-cbc'
+import { convertToCbc, convertToLatLng, isValidCbcCode } from '~/helper/convert-cbc'
 import { validateLatLngRange } from '~/helper/latlng'
 import { isMobile } from '~/helper/agent'
-import { HeaderProperties, History, MapState } from '~/types/header'
+import { HeaderProperties, History } from '~/types/header'
 import titleLogo from '~/assets/images/title-logo.png'
 import markerImg from '~/assets/images/marker.png'
 import { useSearch } from '~/hooks/search'
@@ -20,67 +19,38 @@ const Header = ({
   } = useSearch('')
   const { isMenuOpen, toggleMenu, setIsMenuOpen } = useMenuContext()
 
-  // 검색 버튼을 눌렀을 때 호출되는 handler
   const onSubmitHandler = (event: FormEvent<Element>): void => {
     event.preventDefault()
 
-    let textSplitArray: string[] = searchText.split(',')
-    const mapState: MapState = { cbcCode: '', lat: 0, lng: 0 }
-    // lat, lng 으로 주어질 때
-    if (textSplitArray.length === 2) {
-      mapState.lat = Number.parseFloat(textSplitArray[0])
-      mapState.lng = Number.parseFloat(textSplitArray[1])
-      if (validateLatLngRange(mapState.lat, mapState.lng)) {
-        const cbc = convertToCbc([mapState.lng, mapState.lat])
-        mapState.cbcCode = `${cbc[0]} ${cbc[1]} ${cbc[2]}`
-        // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
-        setMapState(mapState)
-        updateHistoryList(
-          historyList,
-          { lat: mapState.lat, lng: mapState.lng },
-          mapState.cbcCode
-        )
+    const cleanedSearchText = searchText.trim()
+    const textSplitArray = cleanedSearchText.includes(',')
+      ? cleanedSearchText.split(',').map((text) => Number.parseFloat(text)) // 위도, 경도로 주어질 때 (ex. 32.66367, 124.43291)
+      : cleanedSearchText.split(' ') // 국가지점번호로 주어질 때 (ex. 가가 1234 1234)
+
+    // 위도, 경도로 주어질 때
+    if (
+      textSplitArray.length === 2
+      && !Number.isNaN(textSplitArray[0])
+      && !Number.isNaN(textSplitArray[1])
+    ) {
+      const [lat, lng] = textSplitArray
+      if (typeof lat === 'number' && typeof lng === 'number' && validateLatLngRange(lat, lng)) {
+        const cbc = convertToCbc([lng, lat])
+        setMapState({ cbcCode: `${cbc[0]} ${cbc[1]} ${cbc[2]}`, lat, lng })
+        updateHistoryList(historyList, { lat, lng }, `${cbc[0]} ${cbc[1]} ${cbc[2]}`)
       } else {
-        alert("ex. '32.66367, 124.43291'")
+        alert("Invalid coordinates. Expected format: '32.66367, 124.43291'")
+      }
+    } else if (isValidCbcCode(textSplitArray)) { // 국가지점번호로 주어질 때
+      const latLng = convertToLatLng(cleanedSearchText)
+      if (Array.isArray(latLng)) {
+        setMapState({ cbcCode: cleanedSearchText, lat: latLng[1], lng: latLng[0] })
+        updateHistoryList(historyList, { lat: latLng[1], lng: latLng[0] }, cleanedSearchText)
+      } else {
+        alert("Invalid CBC code format. Expected format: '가가 1234 1234'")
       }
     } else {
-      textSplitArray = searchText.split(' ')
-      // 국가지점번호로 주어질 때
-      if (textSplitArray.length === 3) {
-        // s[0](ex.가나)가 문자이며 두 글자이고, 범위 안에 해당될 때
-        const check1 = typeof textSplitArray[0] === 'string'
-          && textSplitArray[0].length === 2
-          && Object.values(w).includes(textSplitArray[0][0])
-          && Object.values(h).includes(textSplitArray[0][1])
-        // s[1],s[2]는 숫자이면서 네 자리
-        const check2 = !Number.isNaN(Number(textSplitArray[1])) && textSplitArray[1].length === 4
-        const check3 = !Number.isNaN(Number(textSplitArray[2])) && textSplitArray[2].length === 4
-        if (!check1 || !check2 || !check3) {
-          alert("ex. '가가 1234 1234'")
-        } else {
-          const latLng: number | [number, number] = convertToLatLng(searchText)
-          if (typeof latLng === 'number') {
-            // convertToLatLng Error
-            alert('ex. 가가 1234 1234')
-          } else {
-            // 그 외의 경우
-            // App.js로 보내는 작업, App.js에서는 state 설정을 변경한다.
-            setMapState({
-              ...mapState,
-              cbcCode: searchText,
-              lat: latLng[1],
-              lng: latLng[0]
-            })
-            updateHistoryList(
-              historyList,
-              { lat: latLng[1], lng: latLng[0] },
-              searchText
-            )
-          }
-        }
-      } else {
-        alert("ex. '32.66367, 124.43291' or '가가 1234 1234'")
-      }
+      alert("Invalid input. Expected format: '32.66367, 124.43291' or '가가 1234 1234'")
     }
   }
 

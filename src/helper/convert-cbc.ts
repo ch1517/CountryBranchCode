@@ -5,6 +5,21 @@ import { LatLngBounds } from 'leaflet'
 import { GRS80, WGS84 } from '~/constants/map'
 import { h, w } from '~/constants/cbc'
 
+export const isValidCbcCode = (textSplitArray: any[]): boolean => {
+  // textSplitArray가 number[]인 경우는 위도, 경도로 주어진 경우이므로 false를 반환
+  if ((textSplitArray as any[]).every((code) => typeof code === 'number')) {
+    return false
+  }
+  return textSplitArray.length === 3
+    && typeof textSplitArray[0] === 'string'
+    && textSplitArray[0].length === 2
+    && Object.values(w).includes(textSplitArray[0][0])
+    && Object.values(h).includes(textSplitArray[0][1])
+    && textSplitArray.slice(1).every(
+      (code: string) => code.length === 4
+        && !Number.isNaN(Number.parseInt(code, 10))
+    )
+}
 /**
  * 위경도 좌표 -> 국가지점번호
  * @param coordinate 위경도 좌표
