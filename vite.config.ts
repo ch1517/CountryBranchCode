@@ -4,6 +4,7 @@ import checker from 'vite-plugin-checker';
 import path from "path";
 
 export default defineConfig({
+  base: 'CountryBranchCode',
   plugins: [
 		react(),
 		checker({
