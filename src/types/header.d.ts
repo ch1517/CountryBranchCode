@@ -11,8 +11,8 @@ export interface History {
   lng: number;
 }
 export interface HeaderProperties {
-  menuState: boolean;
+  isMenuOpen: boolean;
   historyList: History[];
   setMapState: (mapState: MapState) => void;
-  setMenuState: (menuState: boolean) => void;
+  toggleMenu: () => void;
 }

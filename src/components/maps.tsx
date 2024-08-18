@@ -15,7 +15,7 @@ import { MapsProperties, ZoomLevelCheckProperties } from '~/types/maps'
 import { convertToCbc, getLineArray } from '~/helper/convert-cbc'
 import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '~/constants/map'
 
-const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setMenuState }): JSX.Element => {
+const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setIsMenuOpen }): JSX.Element => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel) // initial zoom level provided for MapContainer
   const [lineArray, setLineArray] = useState<any[]>([])
   const map = useMap()
@@ -23,7 +23,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setMenu
   const mapEvents = useMapEvents({
     // 스크롤로 이동할 때 false
     dragstart: () => {
-      setMenuState(false)
+      setIsMenuOpen(false)
     },
     // 지도 움직임 종료
     moveend: () => {
@@ -32,7 +32,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setMenu
     // 지도 zoom 종료
     zoomend: () => {
       setMapZoomLevel(mapEvents.getZoom())
-      setMenuState(false)
+      setIsMenuOpen(false)
       setLineArray(getLineArray(mapZoomLevel, map.getBounds()))
     }
   })
@@ -63,7 +63,7 @@ const ZoomLevelCheck: React.FC<ZoomLevelCheckProperties> = ({ zoomLevel, setMenu
     </div>
   )
 }
-const Maps: React.FC<MapsProperties> = ({ latLng, zoomLevel, setMenuState }) => {
+const Maps = ({ latLng, zoomLevel, setIsMenuOpen }: MapsProperties) : JSX.Element => {
   const [position, setPosition] = useState<any>([latLng.lat, latLng.lng])
   const cbc = convertToCbc([latLng.lng, latLng.lat])
   useEffect(() => {
@@ -78,7 +78,7 @@ const Maps: React.FC<MapsProperties> = ({ latLng, zoomLevel, setMenuState }) => 
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://api.vworld.kr/req/wmts/1.0.0/532CA96F-C19D-3423-A745-FA04E44726C4/midnight/{z}/{y}/{x}.png"
         />
-        <ZoomLevelCheck zoomLevel={zoomLevel} setMenuState={setMenuState} />
+        <ZoomLevelCheck zoomLevel={zoomLevel} setIsMenuOpen={setIsMenuOpen} />
         <MapConsumer>
           {(map) => {
             // 헤더로부터 입력받은 값을 업데이트

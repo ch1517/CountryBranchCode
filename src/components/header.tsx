@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable no-alert */
 import '~/assets/css/App.css'
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent } from 'react'
 import { h, w } from '~/constants/cbc'
 import { convertToCbc, convertToLatLng } from '~/helper/convert-cbc'
 import { validateLatLngRange } from '~/helper/latlng'
@@ -9,11 +9,12 @@ import { isMobile } from '~/helper/agent'
 import { HeaderProperties, History, MapState } from '~/types/header'
 import titleLogo from '~/assets/images/title-logo.png'
 import markerImg from '~/assets/images/marker.png'
+import { useSearch } from '~/hooks/search'
 
-const App: React.FC<HeaderProperties> = ({
-  menuState, historyList, setMapState, setMenuState
-}) => {
-  const [searchText, setSearchText] = useState<string>('') // 검색창에 입력한 값
+const Header = ({
+  isMenuOpen, historyList, setMapState, toggleMenu
+}: HeaderProperties) : JSX.Element => {
+  const { searchText, setSearchText } = useSearch('')
 
   // 검색 버튼을 눌렀을 때 호출되는 handler
   const pushToApp = (event: FormEvent<Element>): void => {
@@ -80,7 +81,7 @@ const App: React.FC<HeaderProperties> = ({
   const menuSateChangeMobile = (): void => {
     // 모바일 환경에서만 input Focus, Blur로 history 영역 제어
     if (isMobile()) {
-      setMenuState(true)
+      toggleMenu()
     }
   }
   const onClickHistory = ({ lng, lat, cbcCode }: History): void => {
@@ -137,9 +138,9 @@ const App: React.FC<HeaderProperties> = ({
             <i className="fas fa-search" />
           </button>
         </form>
-        <div className={menuState ? 'historyOpen' : 'historyClose'}>{makeHistory(historyList)}</div>
+        <div className={isMenuOpen ? 'historyOpen' : 'historyClose'}>{makeHistory(historyList)}</div>
         {/* history 메뉴 toggle (Window의 경우) */}
-        <button className="toggleBtn" type="button" onClick={() => setMenuState(!menuState)}>
+        <button className="toggleBtn" type="button" onClick={() => toggleMenu()}>
           <i className="fas fa-history lg" />
         </button>
       </div>
@@ -147,4 +148,4 @@ const App: React.FC<HeaderProperties> = ({
   )
 }
 
-export default App
+export default Header
