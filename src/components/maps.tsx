@@ -7,7 +7,6 @@ import {
   TileLayer,
   Polygon,
   Marker,
-  Popup,
   Tooltip,
   MapConsumer,
   useMapEvents
@@ -17,7 +16,7 @@ import { LineInfo, MapsProperties, ZoomLevelCheckProperties } from '~/types/maps
 import { convertToCbc, getLineInfoArray } from '~/helper/convert-cbc'
 import { MAX_NATIVE_ZOOM, MAX_ZOOM } from '~/constants/map'
 import { useMenuContext } from '~/contexts/menu-context'
-import { getSurroundingCbcGrid } from '~/helper/surround'
+import { getSurroundingGrid } from '~/helper/surround'
 
 // ZoomLevelCheck 컴포넌트
 const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties): JSX.Element => {
@@ -30,7 +29,8 @@ const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties):
       setMapZoomLevel(map.getZoom())
       setIsMenuOpen(false)
       updateLineArray()
-    }
+    },
+    click: (arg) => handleMapClick(arg)
   })
 
   const updateLineArray = useCallback(() => {
@@ -46,6 +46,13 @@ const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties):
   const handlePolygonClick = useCallback((event: LeafletMouseEvent) => {
     convertToCbc([event.latlng.lng, event.latlng.lat])
   }, [])
+  
+  const handleMapClick = useCallback((event: { latlng: LatLng }) => {
+    console.log('\n\n\n\n--------------------------------------------------------------------')
+    console.log(`[위경도]\nLat: ${event.latlng.lat}, Lng: ${event.latlng.lng}`)
+    const code = convertToCbc([event.latlng.lng, event.latlng.lat])
+    const surrondCode = getSurroundingGrid(code, mapZoomLevel)
+  }, [mapZoomLevel])
 
   return (
     <div>
@@ -77,22 +84,6 @@ const Maps = ({ latLng, zoomLevel }: MapsProperties): JSX.Element => {
     setPosition([latLng.lat, latLng.lng])
   }, [latLng])
 
-  const handleMapClick = useCallback((event: { latlng: LatLng }) => {
-    const code = convertToCbc([event.latlng.lng, event.latlng.lat])
-    const surrondCode = getSurroundingCbcGrid(code)
-    setMarkerPosition([event.latlng.lat, event.latlng.lng]) // 클릭한 위치로 마커 이동
-    setCaption(`
-[위경도]
-Lat: ${event.latlng.lat}, Lng: ${event.latlng.lng}
-
-[지점번호]
-${code}
-
-[주변번호]
-${surrondCode}
-`)
-  }, [])
-
   return (
     <div className="contents">
       <MapContainer
@@ -112,11 +103,7 @@ ${surrondCode}
           {(map) => {
             useEffect(() => {
               map.setView(new LatLng(latLng.lat, latLng.lng), zoomLevel)
-              map.on('click', handleMapClick)
-              return () => {
-                map.off('click', handleMapClick)
-              }
-            }, [map, latLng, zoomLevel, handleMapClick])
+            }, [map, latLng, zoomLevel])
             // eslint-disable-next-line unicorn/no-null
             return null
           }}
