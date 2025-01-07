@@ -144,8 +144,9 @@ const isWithinInnerBoundary = (coordinate: [number, number]): boolean => {
  * @param  {[string, number, number]} text 국가지점번호 배열
  * @returns {string}
  */
-const labelText = (d: number, text: [string, number, number]): string => {
+const labelText = (d: number, text: [string, number, number]): {cbcText:string; compareCode:string;} => {
   let returnTxt = ''
+  let compareCode = ''
   let t1; let
     t2
   switch (d) {
@@ -157,29 +158,33 @@ const labelText = (d: number, text: [string, number, number]): string => {
       t1 = Math.floor(text[1] / 1000).toString()
       t2 = Math.floor(text[2] / 1000).toString()
       returnTxt = `${text[0]} ${t1}XXX ${t2}XXX`
+      compareCode = `${text[0]}${t1}${t2}`
       break
     }
     case 1000: {
       t1 = Math.floor(text[1] / 100).toString()
       t2 = Math.floor(text[2] / 100).toString()
       returnTxt = `${text[0]} ${t1.toString().padStart(2, '0')}XX ${t2.toString().padStart(2, '0')}XX`
+      compareCode = `${text[0]}${t1.toString().padStart(2, '0')}${t2.toString().padStart(2, '0')}`
       break
     }
     case 100: {
       t1 = Math.floor(text[1] / 10).toString()
       t2 = Math.floor(text[2] / 10).toString()
       returnTxt = `${text[0]} ${t1.toString().padStart(3, '0')}X ${t2.toString().padStart(3, '0')}X`
+      compareCode = `${text[0]}${t1.toString().padStart(3, '0')}${t2.toString().padStart(3, '0')}`
       break
     }
     case 10: {
       returnTxt = `${text[0]} ${text[1].toString().padStart(4, '0')} ${text[2].toString().padStart(4, '0')}`
+      compareCode = `${text[0]}${text[1].toString().padStart(4, '0')}${text[2].toString().padStart(4, '0')}`
       break
     }
     default: {
       break
     }
   }
-  return returnTxt
+  return { cbcText:returnTxt ,compareCode }
 }
 /**
  * grid를 그리는 작업
@@ -227,7 +232,7 @@ const getLineInfoArray = (zoomLevel: number, latLngBounds: LatLngBounds): LineIn
         const ny = pArray[index][index2 + 1]
         const nxy = pArray[index + 1][index2 + 1]
         const cbc: [string, number, number] = convertToCbc([(nxy[0] + c[0]) / 2, (nxy[1] + c[1]) / 2])
-        const cbcText = cbc ? labelText(divide, cbc) : ''
+        const {cbcText, compareCode} = cbc ? labelText(divide, cbc) : {cbcText:'', compareCode:''}
 
         lineInfoArray.push({
           latLongArr: [
@@ -237,7 +242,8 @@ const getLineInfoArray = (zoomLevel: number, latLngBounds: LatLngBounds): LineIn
             [ny[1], ny[0]]
           ],
           id: `${zoomLevel.toString()}.${c}y`,
-          cbcText
+          cbcText,
+          compareCode
         })
       }
     }

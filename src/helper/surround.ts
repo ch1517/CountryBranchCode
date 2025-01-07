@@ -8,7 +8,7 @@ enum ZoomLevel {
 const xLabels = ['가', '나', '다', '라', '마', '바', '사'];
 const yLabels = ['가', '나', '다', '라', '마', '바', '사', '아'];
 
-export function getSurroundingGrid(centerGrid: [string, number, number], zoomLevel: ZoomLevel): [string, string, string][] {
+export function getSurroundingGrid(centerGrid: [string, number, number], zoomLevel: ZoomLevel): string[] {
 
   const [gridLabel, gridX, gridY] = centerGrid;
   const formattedX = truncateNumber(String(gridX).padStart(4, '0'), zoomLevel);
@@ -21,13 +21,13 @@ export function getSurroundingGrid(centerGrid: [string, number, number], zoomLev
 
   const directions = [
     [-1, 1], [0, 1], [1, 1],
-    [-1, 0], [1, 0],
+    [-1, 0], [0, 0], [1, 0],
     [-1, -1], [0, -1], [1, -1]
   ];
 
   const surroundingGrids = directions
     .map(([dx, dy]) => calculateNextCoords(xIndex, yIndex, formattedX, formattedY, dx, dy, boundary, zoomLevel))
-    .filter((coord): coord is [string, string, string] => coord !== undefined);
+    .filter((coord): coord is string => coord !== undefined);
 
   console.log(`
 [Zoom Level]
@@ -46,7 +46,7 @@ ${surroundingGrids}`
   return surroundingGrids;
 }
 
-function calculateNextCoords(xIndex: number, yIndex: number, x: number, y: number, dx: number, dy: number, boundary: number, zoomLevel: number): [string, string, string] | undefined {
+function calculateNextCoords(xIndex: number, yIndex: number, x: number, y: number, dx: number, dy: number, boundary: number, zoomLevel: number): string | undefined {
   let newX = x + dx;
   let newY = y + dy;
   let newXIndex = xIndex;
@@ -73,7 +73,8 @@ function calculateNextCoords(xIndex: number, yIndex: number, x: number, y: numbe
     return undefined;
   }
 
-  return [xLabels[newXIndex] + yLabels[newYIndex], padNumber(newX, zoomLevel), padNumber(newY, zoomLevel)];
+  return `${xLabels[newXIndex] + yLabels[newYIndex]}${padNumber(newX, zoomLevel)}${padNumber(newY, zoomLevel)}`;
+  // return [xLabels[newXIndex] + yLabels[newYIndex], padNumber(newX, zoomLevel), padNumber(newY, zoomLevel)];
 }
 
 function getBoundaryValue(zoomLevel: number): ZoomLevel {
@@ -90,7 +91,9 @@ function getBoundaryValue(zoomLevel: number): ZoomLevel {
 }
 
 function truncateNumber(value: string, zoomLevel: number): number {
-  if (zoomLevel > ZoomLevel.HIGH) {
+  if (zoomLevel > ZoomLevel.VERY_HIGH) {
+    return Number(value);
+  }else if (zoomLevel > ZoomLevel.HIGH) {
     if (value.length > 1)
       return Number(value.slice(0, -1));
   } else if (zoomLevel > ZoomLevel.MEDIUM) {
@@ -106,7 +109,9 @@ function truncateNumber(value: string, zoomLevel: number): number {
 function padNumber(value: number, zoomLevel: number): string {
   let targetLength: number = 4;
 
-  if (zoomLevel > ZoomLevel.HIGH) {
+  if (zoomLevel > ZoomLevel.VERY_HIGH) {
+    targetLength = 4;
+  } else if (zoomLevel > ZoomLevel.HIGH) {
     targetLength = 3;
   } else if (zoomLevel > ZoomLevel.MEDIUM) {
     targetLength = 2;

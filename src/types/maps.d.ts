@@ -17,4 +17,5 @@ export interface LineInfo {
   latLongArr: [number, number][]
   id: string
   cbcText: string
+  compareCode: string
 }

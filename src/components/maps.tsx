@@ -22,26 +22,29 @@ import { getSurroundingGrid } from '~/helper/surround'
 const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties): JSX.Element => {
   const [mapZoomLevel, setMapZoomLevel] = useState<number>(zoomLevel)
   const [lineInfoArray, setLineInfoArray] = useState<LineInfo[]>([])
+  const [surrondCode, setSurrondCode] = useState<string[]>([])
   const map = useMapEvents({
     dragstart: () => setIsMenuOpen(false),
     moveend: () => updateLineArray(),
     zoomend: () => {
+      // setSurrondCode([])
       setMapZoomLevel(map.getZoom())
       setIsMenuOpen(false)
       updateLineArray()
     },
     click: (arg) => handleMapClick(arg)
   })
+  const [forceUpdate, setForceUpdate] = useState<number>(0) // 강제 업데이트를 위한 상태 추가
 
   const updateLineArray = useCallback(() => {
     if (map) {
       setLineInfoArray(getLineInfoArray(mapZoomLevel, map.getBounds()))
     }
-  }, [mapZoomLevel, map])
+  }, [mapZoomLevel, map, forceUpdate])
 
   useEffect(() => {
     updateLineArray()
-  }, [mapZoomLevel, updateLineArray])
+  }, [mapZoomLevel, updateLineArray, forceUpdate])
 
   const handlePolygonClick = useCallback((event: LeafletMouseEvent) => {
     convertToCbc([event.latlng.lng, event.latlng.lat])
@@ -51,20 +54,23 @@ const ZoomLevelCheck = ({ zoomLevel, setIsMenuOpen }: ZoomLevelCheckProperties):
     console.log('\n\n\n\n--------------------------------------------------------------------')
     console.log(`[위경도]\nLat: ${event.latlng.lat}, Lng: ${event.latlng.lng}`)
     const code = convertToCbc([event.latlng.lng, event.latlng.lat])
-    const surrondCode = getSurroundingGrid(code, mapZoomLevel)
+    setSurrondCode(getSurroundingGrid(code, mapZoomLevel));
+    setForceUpdate(prev => prev + 1) // 강제 업데이트 트리거
   }, [mapZoomLevel])
 
   return (
     <div>
-      {lineInfoArray.map(({ id, latLongArr, cbcText }) => (
+      {lineInfoArray.map(({ id, latLongArr, cbcText, compareCode }) => (
         <Polygon
-          key={id}
+          key={`${id}-${forceUpdate}`}
           positions={latLongArr}
-          color="white"
+          color={surrondCode.includes(compareCode) ? 'red' : 'white'}
           eventHandlers={{ click: handlePolygonClick }}
         >
           <Tooltip direction="bottom" opacity={1} permanent>
             <span>{cbcText}</span>
+            <br/>
+            <span>{compareCode}</span>
           </Tooltip>
         </Polygon>
       ))}
