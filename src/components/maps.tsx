@@ -9,7 +9,8 @@ import {
   Marker,
   Tooltip,
   MapConsumer,
-  useMapEvents
+  useMapEvents,
+  Popup
 } from 'react-leaflet'
 import { LatLng, LeafletMouseEvent } from 'leaflet'
 import { LineInfo, MapsProperties, ZoomLevelCheckProperties } from '~/types/maps'
@@ -83,8 +84,7 @@ const Maps = ({ latLng, zoomLevel }: MapsProperties): JSX.Element => {
   const [position, setPosition] = useState<[number, number]>([latLng.lat, latLng.lng])
   const [currentZoomLevel] = useState<number>(zoomLevel)
   const { setIsMenuOpen } = useMenuContext()
-  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null)
-  const [caption, setCaption] = useState('')
+  const cbc = convertToCbc([latLng.lng, latLng.lat])
 
   useEffect(() => {
     setPosition([latLng.lat, latLng.lng])
@@ -114,15 +114,17 @@ const Maps = ({ latLng, zoomLevel }: MapsProperties): JSX.Element => {
             return null
           }}
         </MapConsumer>
-        {markerPosition && (
-          <Marker position={markerPosition}>
-            <Tooltip>
-              <p style={{ whiteSpace: 'pre-line' }}>
-                {caption}
-              </p>
-            </Tooltip>
-          </Marker>
-        )}
+        <Marker position={position}>
+          <Popup>
+            <span className="popupSpan">
+              <b>{`${cbc[0]} ${cbc[1]} ${cbc[2]}`}</b>
+              <br />
+              {latLng.lat}
+              ,
+              {latLng.lng}
+            </span>
+          </Popup>
+        </Marker>
       </MapContainer>
     </div>
   )
