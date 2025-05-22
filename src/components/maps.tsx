@@ -87,7 +87,7 @@ const Maps = ({ latLng, zoomLevel }: MapsProperties): JSX.Element => {
           maxZoom={MAX_ZOOM}
           maxNativeZoom={MAX_NATIVE_ZOOM}
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://api.vworld.kr/req/wmts/1.0.0/532CA96F-C19D-3423-A745-FA04E44726C4/midnight/{z}/{y}/{x}.png"
+          url="https://api.vworld.kr/req/wmts/1.0.0/B3ADA0F5-591F-3740-9D64-752D790BEDC1/midnight/{z}/{y}/{x}.png"
         />
         <ZoomLevelCheck zoomLevel={currentZoomLevel} setIsMenuOpen={setIsMenuOpen} />
         <MapConsumer>
